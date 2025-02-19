@@ -8,7 +8,7 @@ w4 bundle cart.wasm --title "dumb game" --html index.html
 convert wormy.png +dither -colors 4 -filter box -normalize png:wormy.png
 w4 png2src --c wormy.png
 
-
+thumbnail 600x335
       "-I/opt/wasi-sdk/share/wasi-sysroot/include/wasm32-wasi/",
 
 

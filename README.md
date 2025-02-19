@@ -18,7 +18,7 @@ Features:
     * horrible 4 color pallete
 
 
-thats it - don't go expecting this kind of service every day
+thats it no game logic yet - don't go expecting this kind of service every day
 
 
 ## wasm-4
