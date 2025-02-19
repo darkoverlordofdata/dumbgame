@@ -10,31 +10,15 @@ __as seen on bluesky__
 
 
 ## work in progress
+todays build of dumb game!
 
-this is a game written in C for the [WASM-4](https://wasm4.org) fantasy console.
+Features:
+* crappy graphics
+    * a pink worm like sprite
+    * horrible 4 color pallete
 
-if you run this game now i think you can click the firebutton to make it blink? we'll see.
 
-this is just the start of dumb game. just wait. it will get dumber.
-
-through the magick of wasm you can also play __dumb game__ on the web at https://darkoverlordofdata.com/dumbgame
-
-## crappy art
-sorry, none yet
-
-## building
-
-Build the cart by running:
-
-```shell
-make
-```
-
-Then run it with:
-
-```shell
-w4 run build/cart.wasm
-```
+thats it - don't go expecting this kind of service every day
 
 
 ## wasm-4
