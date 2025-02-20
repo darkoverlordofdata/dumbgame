@@ -2,7 +2,7 @@
 
 ## deploy
 cd build
-w4 bundle cart.wasm --title "dumb game" --html index.html
+w4 bundle cart.wasm --title "work brain" --html index.html
 
 ## splash
 convert splash.png +dither -colors 4 -filter box -normalize png:splash.png
