@@ -70,7 +70,7 @@ static struct __CFClass class = {
     .name = "CFRandom",
     .size = sizeof(struct __CFRandom),
 };
-const CFClassRef CFRandomClass = &class;
+const CFClassRef CFRandom = &class;
 
 unsigned long frameCounter = 999;
 
@@ -79,7 +79,7 @@ method unsigned long NextLong(void)
     if (CFRandomInstance == NULL) {
         // unsigned long seed = (unsigned long)time(NULL);
         unsigned long seed = frameCounter;
-        CFRandomInstance = New((CFRandomRef)CFCreate(CFRandomClass), seed);
+        CFRandomInstance = NewRandom(seed);
     }
 
     return genrand_int32(CFRandomInstance);
@@ -90,18 +90,19 @@ method double NextDouble(void)
     if (CFRandomInstance == NULL) {
         // unsigned long seed = (unsigned long)time(NULL);
         unsigned long seed = frameCounter;
-        CFRandomInstance = New((CFRandomRef)CFCreate(CFRandomClass), seed);
+        CFRandomInstance = NewRandom(seed);
     }
     return genrand_real1(CFRandomInstance);
 }
 
-method void* New(CFRandomRef this)
+method void* Ctor(CFRandomRef this)
 {
+    (CFRandomRef)this;
     // return New(this, (unsigned long)time(NULL));
-    return New(this, frameCounter);
+    return NewRandom(frameCounter);
 }
 
-method void* New(CFRandomRef this, unsigned long seed)
+method void* Ctor(CFRandomRef this, unsigned long seed)
 {
     memset(this->mt, 0, (MT19937_N * sizeof(unsigned long)));
     this->mti = MT19937_N + 1;
@@ -109,7 +110,7 @@ method void* New(CFRandomRef this, unsigned long seed)
     return this;
 }
 
-method void* New(CFRandomRef this, unsigned long seed[], int length)
+method void* Ctor(CFRandomRef this, unsigned long seed[], int length)
 {
     memset(this->mt, 0, (MT19937_N * sizeof(unsigned long)));
     this->mti = MT19937_N + 1;

@@ -1,6 +1,6 @@
 {
-    "name":"DumbGame",
-    "short_name":"DumbGame",
+    "name":"WormBrain",
+    "short_name":"WormBrain",
     "start_url":"index.html",
     "display":"standalone",
     "background_color":"#5900b3",
@@ -10,7 +10,7 @@
     "orientation": "portrait-primary",
     "icons":[
       {
-      "src":"DumbGame.png",                    
+      "src":"WormBrain.png",                    
       "sizes":"256x256",
       "type":"image/png"
       }

@@ -11,16 +11,18 @@ __as seen on bluesky__
 
 
 ## work in progress
-todays build of dumb game!
+todays build of dumb game! 
 
 Features:
-* crappy graphics
-    * a pink worm like sprite
-    * horrible 4 color pallete
-
+- crappy graphics
+    - a pink worm like sprite
+    - horrible 4 color pallete
+    - switch to classic pallete *
+    - splash screen *
 
 thats it no game logic yet - don't go expecting this kind of service every day
 
+*=(2/20/25)
 
 ## wasm-4
 

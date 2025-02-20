@@ -31,8 +31,9 @@ PetRef method Ctor(PetRef this, char* name)
 {
     (PetRef)this;
     (char*)name;
-    this->type = PetBrainWorm;
-    this->name = NewString(name);
+    
+    // this->type = PetBrainWorm;
+    // this->name = NewString(name);
     return this;
 }
 

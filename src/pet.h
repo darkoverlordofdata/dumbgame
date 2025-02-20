@@ -6,17 +6,16 @@
 
 typedef struct __Pet* PetRef;
 extern CFClassRef Pet;
+typedef struct __PetDataRef*    PetDataRef;
 
-typedef enum PetType: unsigned int {
-    PetBrainWorm
-} PetType;
 
 struct __Pet {
     struct __CFObject obj;
-    PetType type;
-    CFStringRef name;
+    PetDataRef data;
     long    x;
-    long    y;    
+    long    y;
+    
+
 };
 
 PetRef method Ctor(PetRef, char*);

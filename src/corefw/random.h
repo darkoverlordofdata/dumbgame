@@ -58,21 +58,24 @@
 // static int mti=MT19937_N+1; /* mti==MT19937_N+1 means mt[MT19937_N] is not initialized */
 
 typedef struct __CFRandom* CFRandomRef;
-extern const CFClassRef CFRandomClass;
+extern const CFClassRef CFRandom;
 
 struct __CFRandom {
    struct __CFObject obj;
    // int mti;
    unsigned long mti;
    unsigned long mt[MT19937_N];
+   unsigned long seed;
 };
 
-// static CFRandomRef CFRandomInstance = NULL;
-
-extern method void* New(CFRandomRef);
-extern method void* New(CFRandomRef, unsigned long);
-extern method void* New(CFRandomRef, unsigned long [], int );
+extern method void* Ctor(CFRandomRef);
+extern method void* Ctor(CFRandomRef, unsigned long);
+extern method void* Ctor(CFRandomRef, unsigned long [], int );
 
 extern method unsigned long NextLong(void);
 extern method double NextDouble(void);
 
+static inline CFRandomRef NewRandom(unsigned long seed)
+{
+    return Ctor((CFRandomRef)CFCreate(CFRandom), seed);
+}

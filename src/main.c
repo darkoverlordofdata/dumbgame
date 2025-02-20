@@ -12,7 +12,6 @@ GameRef game;
 bool first = true;
 
 void start() {
-    frameCounter++;
 	pool = CFNew(CFRefPool);
     game = CFCreate(Game);
     Start(game);
@@ -20,11 +19,6 @@ void start() {
 }
 
 void update () {
-    if (first) {
-        first = false;
-        tracef("%d", (int)frameCounter);
-
-    }
     Update(game);
-
+    Draw(game);
 }
