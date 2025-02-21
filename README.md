@@ -17,6 +17,7 @@ Features:
     - <s>horrible 4 color pallete</s>
     - switch to [ice cream gb](https://lospec.com/palette-list/ice-cream-gb) pallete 
     - splash screen 
+    - start game & show menu
 
 thats it no game logic yet - don't go expecting this kind of service every day
 

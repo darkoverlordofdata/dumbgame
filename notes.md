@@ -46,3 +46,9 @@ thumbnail 600x335
 ## start screen
 
 
+```
+make
+w4 run build/cart.wasm
+cd build
+w4 bundle cart.wasm --title "Worm Brain" --html index.html
+```
