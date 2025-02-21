@@ -2,6 +2,7 @@
 #include "corefw/random.h"
 #include "menu.h"
 #include "wasm4.h"
+#include "game.h"
 
 static struct __CFClass class = {
       .name = "Menu",
@@ -22,38 +23,40 @@ static const uint8_t status[104]    = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,
 static const uint8_t comm[101]      = { 0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x07,0x80,0x00,0x00,0x1f,0x80,0x00,0x01,0xff,0xc0,0x00,0x07,0xff,0xc3,0x80,0x3f,0x8f,0xff,0xf8,0xff,0x07,0xff,0xf1,0xf7,0x27,0xf7,0xf3,0x8e,0x67,0xc1,0xe7,0x01,0xc0,0x01,0xee,0x63,0x03,0x03,0xdf,0xe1,0x8f,0xff,0xbf,0xc7,0x1f,0xff,0x7f,0xff,0x1f,0xfe,0x7f,0xff,0x9f,0xdc,0xfc,0x3f,0x80,0x38,0xff,0xff,0x80,0x60,0xff,0xff,0x81,0xc0,0x3f,0xff,0x8f,0x80,0x00,0x1f,0xff,0x00,0x00,0x1f,0xfc,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x00 };
 
 /*
- * menu data+callback
+ * menu data+callback  10,130   10,50,90,130
  */
 static struct MenuItem m[] = {
-    [0]={ .index=0, .x=10, .y=10, .width=26, .height=26, .data=food, ^(MenuState i) {
+    [0]={ .index=0, .x=5, .y=5, .width=26, .height=26, .data=food, ^(MenuState i) {
         (void)i;
     }},
-    [1]={ .index=1, .x=10, .y=50, .width=26, .height=26, .data=light, ^(MenuState i) {
+    [1]={ .index=1, .x=45, .y=5, .width=26, .height=26, .data=light, ^(MenuState i) {
         (void)i;
     }},
-    [2]={ .index=2, .x=10, .y=90, .width=29, .height=26, .data=play, ^(MenuState i) {
+    [2]={ .index=2, .x=85, .y=5, .width=29, .height=26, .data=play, ^(MenuState i) {
         (void)i;
     }},
-    [3]={ .index=3, .x=10, .y=130, .width=30, .height=26, .data=health, ^(MenuState i) {
+    [3]={ .index=3, .x=125, .y=5, .width=30, .height=26, .data=health, ^(MenuState i) {
         (void)i;
     }},
-    [4]={ .index=4, .x=124, .y=10, .width= 28, .height=26, .data=clean, ^(MenuState i) {
+    [4]={ .index=4, .x=5, .y=129, .width= 28, .height=26, .data=clean, ^(MenuState i) {
         (void)i;
     }},
-    [5]={ .index=5, .x=124, .y=50, .width=30, .height=26, .data=meter, ^(MenuState i) {
+    [5]={ .index=5, .x=45, .y=129, .width=30, .height=26, .data=meter, ^(MenuState i) {
         (void)i;
     }},
-    [6]={ .index=6, .x=124, .y=90, .width=32, .height=26, .data=status, ^(MenuState i) {
+    [6]={ .index=6, .x=85, .y=129, .width=32, .height=26, .data=status, ^(MenuState i) {
         (void)i;
     }},
-    [7]={ .index=7, .x=124, .y=130, .width=31, .height=26, .data=comm, ^(MenuState i) {
+    [7]={ .index=7, .x=125, .y=129, .width=31, .height=26, .data=comm, ^(MenuState i) {
         (void)i;
     }},
 };
 
-MenuRef method Ctor(MenuRef this) 
+MenuRef method Ctor(MenuRef this, GameRef game) 
 {
     (void *)this; 
+    this->game = game;
+    this->index = MenuStateNone;
     return this;   
 }
 
@@ -62,16 +65,37 @@ void method Start(MenuRef this)
     (void *)this; 
 }
 
-void method Update(MenuRef this)
+void method Update(MenuRef this, uint8_t input)
 {
     (void *)this; 
+
+    if ( input & BUTTON_1 ) {
+        this->active = true;
+        this->index = MenuStateFood;
+    }
+    if ( input & BUTTON_LEFT ) {
+        this->index--;
+    }
+    if ( input & BUTTON_RIGHT ) {
+        this->index++;
+    }
+    if (this->index < MenuStateFood) this->index = MenuStateComm;
+    if (this->index > MenuStateComm) this->index = MenuStateFood;
 }
 
 void method Draw(MenuRef this)
 {
     (void *)this; 
 
-    for (long i = 0; i<7; i++) {
+    for (long i = 0; i<8; i++) {
+        if(i == this->index ) {
+            *DRAW_COLORS = 3;
+         }else {
+            *DRAW_COLORS = 4;
+        }
         blit(m[i].data, m[i].x, m[i].y, m[i].width, m[i].height, BLIT_1BPP);
     }
 }
+
+
+

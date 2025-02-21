@@ -1,6 +1,7 @@
 #include "game.h"
 #include "corefw/object.h"
 #include "corefw/random.h"
+#include "menu.h"
 #include "pet.h"
 #include "splash.h"
 #include "wasm4.h"
@@ -20,6 +21,7 @@ GameRef method Ctor(GameRef this) {
     this->state = GameStateSplashScreen;
     this->frameCounter = 0;
     this->splash = NewSplash();
+    this->menu = NewMenu(this);
     return this;
 }
 
@@ -34,6 +36,15 @@ void method Start(GameRef this) {
 
 }
 
+uint8_t method PressedThisFrame(GameRef this)
+{
+    (void *)this;
+    uint8_t gamepad = *GAMEPAD1;
+    uint8_t pressedThisFrame = gamepad & (gamepad ^ this->previousGamepad);
+    this->previousGamepad = gamepad;
+    return pressedThisFrame;
+}
+
 void method Update(GameRef this) {
     (void *)this;
     this->frameCounter++;
@@ -41,21 +52,19 @@ void method Update(GameRef this) {
     switch (this->state) {
     case GameStateSplashScreen:
         Update(this->splash);
-        uint8_t gamepad = *GAMEPAD1;
-        uint8_t pressedThisFrame = gamepad & (gamepad ^ this->previousGamepad);
-        if (pressedThisFrame & BUTTON_1) {
-            // if (this->first) {
-                tracef("%d", (int)this->frameCounter);
-                this->rnd = NewRandom(frameCounter);
-                this->first = false;
-            // }
-            this->previousGamepad = gamepad;
-            trace("X button was just pressed!");
+        if ( PressedThisFrame(this) & BUTTON_1 ) {
+            tracef("frameCounter=%d", (int)this->frameCounter);
+            this->rnd = NewRandom(frameCounter);
+            this->first = false;
+            this->state = GameStateRunning;
         }
         break;
 
     case GameStateRunning:
-
+        Update(this->menu, PressedThisFrame(this));
+        // TODO create new pet?
+        this->pet = NewPet("frodo");
+        Move(this->pet, 80, 35);
         break;
 
     case GameStateEnd:
@@ -78,7 +87,9 @@ void method Draw(GameRef this) {
         break;
 
     case GameStateRunning:
-
+        Draw(this->menu);
+        *DRAW_COLORS = 0x0312;
+        Draw(this->pet);
         break;
 
     case GameStateEnd:

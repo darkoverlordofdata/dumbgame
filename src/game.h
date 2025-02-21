@@ -2,6 +2,7 @@
 #include "corefw/cfstring.h"
 #include "corefw/class.h"
 #include "corefw/corefw.h" // IWYU pragma: keep
+#include "menu.h"
 #include "pet.h"
 #include "splash.h"
 
@@ -19,6 +20,7 @@ struct __Game {
     CFStringRef title;
     GameState state;
     SplashRef splash;
+    MenuRef menu;
     PetRef pet;
     bool first;
     unsigned long frameCounter;
@@ -30,6 +32,7 @@ GameRef method Ctor(GameRef);
 void method Start(GameRef);
 void method Update(GameRef);
 void method Draw(GameRef);
+uint8_t method PressedThisFrame(GameRef);
 
 static inline GameRef NewPetData()
 {

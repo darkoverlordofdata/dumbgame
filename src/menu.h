@@ -2,13 +2,15 @@
 #include "corefw/cfstring.h"
 #include "corefw/class.h"
 #include "corefw/corefw.h" // IWYU pragma: keep
-#include "game.h"
 
 typedef struct __Menu* MenuRef;
 extern CFClassRef Menu;
 
-typedef enum MenuState: unsigned int {
-    MenuStateFood,
+typedef struct __Game* GameRef;
+
+typedef enum MenuState: int {
+    MenuStateNone = -1,
+    MenuStateFood = 0,
     MenuStateLight,
     MenuStatePlay,
     MenuStateHealth,
@@ -39,7 +41,7 @@ struct MenuItem {
 
 MenuRef method Ctor(MenuRef, GameRef);
 void method Start(MenuRef);
-void method Update(MenuRef);
+void method Update(MenuRef, uint8_t);
 void method Draw(MenuRef);
 
 static inline MenuRef NewMenu(GameRef game)
