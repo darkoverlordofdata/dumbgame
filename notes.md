@@ -25,6 +25,10 @@ w4 png2src --c meter.png
 w4 png2src --c status.png
 w4 png2src --c comm.png
 
+convert clean.png +dither -colors 4 -filter box -normalize png:clean.png
+convert food.png +dither -colors 4 -filter box -normalize png:food.png
+convert light.png +dither -colors 4 -filter box -normalize png:light.png
+
 
 convert health.png +dither -colors 4 -filter box -normalize png:health.png
 convert meter.png +dither -colors 4 -filter box -normalize png:meter.png
