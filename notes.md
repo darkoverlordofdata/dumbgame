@@ -15,8 +15,21 @@ w4 png2src --c title1.png
 convert wormy.png +dither -colors 4 -filter box -normalize png:wormy.png
 w4 png2src --c wormy.png
 
+## menu
+w4 png2src --c food.png
+w4 png2src --c light.png
+w4 png2src --c play.png
+w4 png2src --c health.png
+w4 png2src --c clean.png
+w4 png2src --c meter.png
+w4 png2src --c status.png
+w4 png2src --c comm.png
 
 
+convert health.png +dither -colors 4 -filter box -normalize png:health.png
+convert meter.png +dither -colors 4 -filter box -normalize png:meter.png
+convert status.png +dither -colors 4 -filter box -normalize png:status.png
+convert comm.png +dither -colors 4 -filter box -normalize png:comm.png
 
 thumbnail 600x335
       "-I/opt/wasi-sdk/share/wasi-sysroot/include/wasm32-wasi/",
@@ -27,9 +40,5 @@ thumbnail 600x335
 <!-- ![alt as seen on bluesky](https://github.com/darkoverlordofdata/demonic/blob/main/use-case-1.png?raw=true) -->
 
 ## start screen
-
-splash screen
-
-
 
 

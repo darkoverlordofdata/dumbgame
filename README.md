@@ -14,13 +14,12 @@ todays build of dumb game!
 Features:
 - crappy graphics
     - a pink worm like sprite
-    - horrible 4 color pallete
-    - switch to classic pallete *
-    - splash screen *
+    - <s>horrible 4 color pallete</s>
+    - switch to [ice cream gb](https://lospec.com/palette-list/ice-cream-gb) pallete 
+    - splash screen 
 
 thats it no game logic yet - don't go expecting this kind of service every day
 
-*=(2/20/25)
 
 ## wasm-4
 
