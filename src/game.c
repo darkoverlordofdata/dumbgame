@@ -56,6 +56,7 @@ void method Update(GameRef this) {
             tracef("frameCounter=%d", (int)this->frameCounter);
             this->rnd = NewRandom(frameCounter);
             this->first = false;
+            this->pet = NewPet("frodo");
             this->state = GameStateRunning;
         }
         break;
@@ -63,7 +64,6 @@ void method Update(GameRef this) {
     case GameStateRunning:
         Update(this->menu, PressedThisFrame(this));
         // TODO create new pet?
-        this->pet = NewPet("frodo");
         Move(this->pet, 80, 35);
         break;
 
