@@ -37,34 +37,34 @@ extern const CFClassRef CFUuidClass;
  * 
  */
  typedef struct CFUUIDBytes {
-    uint8_t byte0;
-    uint8_t byte1;
-    uint8_t byte2;
-    uint8_t byte3;
-    uint8_t byte4;
-    uint8_t byte5;
-    uint8_t byte6;
-    uint8_t byte7;
-    uint8_t byte8;
-    uint8_t byte9;
-    uint8_t byte10;
-    uint8_t byte11;
-    uint8_t byte12;
-    uint8_t byte13;
-    uint8_t byte14;
-    uint8_t byte15;
+        uint8_t byte0;
+        uint8_t byte1;
+        uint8_t byte2;
+        uint8_t byte3;
+        uint8_t byte4;
+        uint8_t byte5;
+        uint8_t byte6;
+        uint8_t byte7;
+        uint8_t byte8;
+        uint8_t byte9;
+        uint8_t byte10;
+        uint8_t byte11;
+        uint8_t byte12;
+        uint8_t byte13;
+        uint8_t byte14;
+        uint8_t byte15;
 } CFUUIDBytes;
 
 
 
  struct __CFUuid
  {
-     struct __CFObject obj;
-     /* uuid data */
-     CFUUIDBytes value;
-     unsigned char uuid[16];
-     /* cached string of uuid */
-     char to_string_cache[80];
+         struct __CFObject obj;
+         /* uuid data */
+         CFUUIDBytes value;
+         unsigned char uuid[16];
+         /* cached string of uuid */
+         char to_string_cache[80];
  };
  
  

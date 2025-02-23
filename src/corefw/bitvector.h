@@ -32,26 +32,26 @@ SOFTWARE.
 // #include "cfw.h"
 
 /**
- *  MACRO Min
- *      cache results of calculation in pocket scope 
+ *    MACRO Min
+ *            cache results of calculation in pocket scope 
  */
-#define Min(a, b)            \
-    ({                       \
-        __auto_type _a = a;  \
-        __auto_type _b = b;  \
-        (_a < _b) ? _a : _b; \
-    })
+#define Min(a, b)                        \
+        ({                                             \
+                __auto_type _a = a;    \
+                __auto_type _b = b;    \
+                (_a < _b) ? _a : _b; \
+        })
 
 /**
- *  MACRO Max
- *      cache results of calculation in pocket scope 
+ *    MACRO Max
+ *            cache results of calculation in pocket scope 
  */
-#define Max(a, b)            \
-    ({                       \
-        __auto_type _a = a;  \
-        __auto_type _b = b;  \
-        (_a > _b) ? _a : _b; \
-    })
+#define Max(a, b)                        \
+        ({                                             \
+                __auto_type _a = a;    \
+                __auto_type _b = b;    \
+                (_a > _b) ? _a : _b; \
+        })
 
 typedef struct __CFBitVector* CFBitVectorRef;
 extern const CFClassRef CFBitVector;
@@ -60,9 +60,9 @@ extern const CFClassRef CFBitVector;
  * CFBitVector instance variables
  */
  struct __CFBitVector {
-    struct __CFObject obj;
-    int length;
-    unsigned int* words;
+        struct __CFObject obj;
+        int length;
+        unsigned int* words;
 };
 
 
@@ -74,5 +74,5 @@ extern method bool IsEmpty(CFBitVectorRef);
 extern method void Set(CFBitVectorRef, int, bool); 
 extern method bool Get(CFBitVectorRef, int); 
 extern method void Clear(CFBitVectorRef);
-extern method void Clear(CFBitVectorRef, int);  
+extern method void Clear(CFBitVectorRef, int);    
 extern method char* ToString(CFBitVectorRef);

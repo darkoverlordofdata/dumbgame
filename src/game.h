@@ -5,7 +5,6 @@
 #include "menu.h"
 #include "pet.h"
 #include "splash.h"
-#include "pet_data.h"
 #include "config.h"
 
 typedef struct __Game* GameRef;
@@ -17,6 +16,7 @@ typedef enum GameState: unsigned int {
     GameStateRunning,
     GameStateEnd
 } GameState;
+
 
 struct __Game {
     struct __CFObject obj;

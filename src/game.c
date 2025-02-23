@@ -7,9 +7,12 @@
 #include "splash.h"
 #include "wasm4.h"
 
+static uint32_t darkoverlordofdata = 0xd16a; // big if true!
+
+
 static struct __CFClass class = {
-      .name = "Game",
-      .size = sizeof(struct __Game),
+    .name = "Game",
+    .size = sizeof(struct __Game),
 };
 CFClassRef Game = &class;
 
@@ -27,20 +30,18 @@ GameRef method Ctor(GameRef this) {
     return this;
 }
 
-
 void method Start(GameRef this) {
     (void *)this;
 
-    //https://lospec.com/palette-list/ice-cream-gb
+    // https://lospec.com/palette-list/ice-cream-gb
     PALETTE[0] = 0xfff6d3;
     PALETTE[1] = 0xf9a875;
     PALETTE[2] = 0xeb6b6f;
-    PALETTE[3] = 0x7c3f58;  
-
+    PALETTE[3] = 0x7c3f58;
+    diskr(&this->data, sizeof(this->data));
 }
 
-uint8_t method PressedThisFrame(GameRef this)
-{
+uint8_t method PressedThisFrame(GameRef this) {
     (void *)this;
     uint8_t gamepad = *GAMEPAD1;
     uint8_t pressedThisFrame = gamepad & (gamepad ^ this->previousGamepad);
@@ -55,24 +56,26 @@ void method Update(GameRef this) {
     switch (this->state) {
     case GameStateSplashScreen:
         Update(this->splash);
-        if ( PressedThisFrame(this) & BUTTON_1 ) {
+        if (PressedThisFrame(this) & BUTTON_1) {
             tracef("frameCounter=%d", (int)this->frameCounter);
             this->rnd = NewRandom(frameCounter);
+            diskr(&this->data, sizeof(this->data));
             this->first = false;
-            // this->pet = NewPet("frodo");
             this->state = GameStateInputName;
         }
-        break;
+    break;
 
     case GameStateInputName:
-        // diskr(&this->data, sizeof(this->data));
-        Update(this->config);
-        // this->state = GameStateRunning;
+        if (this->data.magic != darkoverlordofdata) {
+            Update(this->config);
+        } else {
+            this->pet = NewPet(this);
+            this->state = GameStateRunning;
+        }
         break;
 
     case GameStateRunning:
         Update(this->menu, PressedThisFrame(this));
-        // TODO create new pet?
         Move(this->pet, 80, 35);
         break;
 
@@ -101,7 +104,7 @@ void method Draw(GameRef this) {
     case GameStateRunning:
         Draw(this->menu);
         *DRAW_COLORS = 0x0312;
-        Draw(this->pet);
+        // Draw(this->pet);
         break;
 
     case GameStateEnd:

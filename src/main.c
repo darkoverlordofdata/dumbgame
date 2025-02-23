@@ -4,15 +4,11 @@
 #include "wasm4.h"
 #include "game.h"
 
-extern unsigned long frameCounter;
-
 CFRefPoolRef pool = NULL;
 GameRef game;
 
-bool first = true;
-
 void start() {
-	pool = CFNew(CFRefPool);
+	pool = NewCFRefPool();
     game = NewGame();
     Start(game);
 

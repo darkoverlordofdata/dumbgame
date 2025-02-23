@@ -12,7 +12,7 @@ static Keyboard_Row keyboard[] = {
 
 typedef struct { int x, y; } Keyplace;
 
-static const int kbrows = 3;
+const int kbrows = 3;
 
 static int mod(int x, int n) {
   return ((x % n) + n) % n;

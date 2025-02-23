@@ -28,14 +28,14 @@ SOFTWARE.
 #include "stdlib.h"
 
 static struct __CFClass class = {
-    .name = "CFBitVector",
-    .size = sizeof(struct __CFBitVector),
+        .name = "CFBitVector",
+        .size = sizeof(struct __CFBitVector),
 };
 const CFClassRef CFBitVector = &class;
 
 
 /*
- * CFBitVectors are packed into arrays of "words."  Currently a word
+ * CFBitVectors are packed into arrays of "words."    Currently a word
  * consists of 32 bits, requiring 5 address bits.
  */
 const int ADDRESS_BITS_PER_WORD = 5;
@@ -46,32 +46,32 @@ const int64_t WORD_MASK = 0xffffffff;
  */
 unsigned int numberOfTrailingZeros(unsigned int i)
 {
-    if (i == 0)
-        return 32;
-    unsigned int x = i;
-    unsigned int y;
-    unsigned int n = 31;
-    y = x << 16;
-    if (y != 0) {
-        n -= 16;
-        x = y;
-    }
-    y = x << 8;
-    if (y != 0) {
-        n -= 8;
-        x = y;
-    }
-    y = x << 4;
-    if (y != 0) {
-        n -= 4;
-        x = y;
-    }
-    y = x << 2;
-    if (y != 0) {
-        n -= 2;
-        x = y;
-    }
-    return (n - ((x << 1) >> 31));
+        if (i == 0)
+                return 32;
+        unsigned int x = i;
+        unsigned int y;
+        unsigned int n = 31;
+        y = x << 16;
+        if (y != 0) {
+                n -= 16;
+                x = y;
+        }
+        y = x << 8;
+        if (y != 0) {
+                n -= 8;
+                x = y;
+        }
+        y = x << 4;
+        if (y != 0) {
+                n -= 4;
+                x = y;
+        }
+        y = x << 2;
+        if (y != 0) {
+                n -= 2;
+                x = y;
+        }
+        return (n - ((x << 1) >> 31));
 }
 
 /**
@@ -83,109 +83,109 @@ unsigned int numberOfTrailingZeros(unsigned int i)
  */
 method void* New(CFBitVectorRef this, int nbits)
 {
-    this->length = 0;
-    if (nbits > 0) {
-        int size = (((nbits - 1) >> ADDRESS_BITS_PER_WORD) + 1);
-        this->words = calloc((size_t)size, sizeof(int*));
-        for (int i = 0; i < size; i++)
-            this->words[i] = 0;
-        this->length = size;
-    }
-    return this;
+        this->length = 0;
+        if (nbits > 0) {
+                int size = (((nbits - 1) >> ADDRESS_BITS_PER_WORD) + 1);
+                this->words = calloc((size_t)size, sizeof(int*));
+                for (int i = 0; i < size; i++)
+                        this->words[i] = 0;
+                this->length = size;
+        }
+        return this;
 }
 
 method void* New(CFBitVectorRef this)
 {
-    return New(this, 16);
+        return New(this, 16);
 }
 
 method int NextSetBit(CFBitVectorRef this, int fromIndex)
 {
-    int u = fromIndex >> ADDRESS_BITS_PER_WORD;
-    int wordsInUse = this->length;
+        int u = fromIndex >> ADDRESS_BITS_PER_WORD;
+        int wordsInUse = this->length;
 
-    unsigned int word = this->words[u] & (WORD_MASK << fromIndex);
-    while (true) {
-        if (word != 0)
-            return (int)((u * BITS_PER_WORD) + numberOfTrailingZeros(word));
-        if (++u == wordsInUse)
-            return -1;
-        word = this->words[u];
-    }
+        unsigned int word = this->words[u] & (WORD_MASK << fromIndex);
+        while (true) {
+                if (word != 0)
+                        return (int)((u * BITS_PER_WORD) + numberOfTrailingZeros(word));
+                if (++u == wordsInUse)
+                        return -1;
+                word = this->words[u];
+        }
 }
 
 method bool Intersects(CFBitVectorRef this, CFBitVectorRef set)
 {
-    int wordsInUse = this->length;
+        int wordsInUse = this->length;
 
-    for (int i = Min(wordsInUse, set->length) - 1; i >= 0; i--)
-        if ((this->words[i] & set->words[i]) != 0)
-            return true;
-    return false;
+        for (int i = Min(wordsInUse, set->length) - 1; i >= 0; i--)
+                if ((this->words[i] & set->words[i]) != 0)
+                        return true;
+        return false;
 }
 
 method bool IsEmpty(CFBitVectorRef this)
 {
-    return this->length == 0;
+        return this->length == 0;
 }
 
 method void Set(CFBitVectorRef this, int bitIndex, bool value)
 {
-    int wordIndex = bitIndex >> ADDRESS_BITS_PER_WORD;
-    int wordsInUse = this->length;
-    int wordsRequired = wordIndex + 1;
+        int wordIndex = bitIndex >> ADDRESS_BITS_PER_WORD;
+        int wordsInUse = this->length;
+        int wordsRequired = wordIndex + 1;
 
-    if (wordIndex >= this->length) {
-        this->words = realloc(this->words, sizeof(unsigned int) * (size_t)(wordIndex + 1));
-        // this = realloc(this, sizeof(CFObject) + sizeof(int) + sizeof(unsigned int) * wordIndex + 1);
-    }
-    if (wordsInUse < wordsRequired) {
-
-        int mm = Max(2 * wordsInUse, wordsRequired);
-        // words.resize(int.max(2 * wordsInUse, wordsRequired));
-        // this = realloc(this, sizeof(CFObject) + sizeof(int) + sizeof(unsigned int) * Max(2 * wordsInUse, wordsRequired));
-        this->words = realloc(this->words, sizeof(unsigned int) * (size_t)mm);
-        for (int i = wordsInUse, l = this->length; i < l; i++) {
-            this->words[i] = 0;
+        if (wordIndex >= this->length) {
+                this->words = realloc(this->words, sizeof(unsigned int) * (size_t)(wordIndex + 1));
+                // this = realloc(this, sizeof(CFObject) + sizeof(int) + sizeof(unsigned int) * wordIndex + 1);
         }
-    }
+        if (wordsInUse < wordsRequired) {
 
-    if (value) {
-        this->words[wordIndex] |= (1 << bitIndex);
-    } else {
-        this->words[wordIndex] &= ~(1 << bitIndex);
-    }
+                int mm = Max(2 * wordsInUse, wordsRequired);
+                // words.resize(int.max(2 * wordsInUse, wordsRequired));
+                // this = realloc(this, sizeof(CFObject) + sizeof(int) + sizeof(unsigned int) * Max(2 * wordsInUse, wordsRequired));
+                this->words = realloc(this->words, sizeof(unsigned int) * (size_t)mm);
+                for (int i = wordsInUse, l = this->length; i < l; i++) {
+                        this->words[i] = 0;
+                }
+        }
+
+        if (value) {
+                this->words[wordIndex] |= (1 << bitIndex);
+        } else {
+                this->words[wordIndex] &= ~(1 << bitIndex);
+        }
 }
 
 method bool Get(CFBitVectorRef this, int bitIndex)
 {
-    int wordIndex = bitIndex >> ADDRESS_BITS_PER_WORD;
-    int wordsInUse = this->length;
+        int wordIndex = bitIndex >> ADDRESS_BITS_PER_WORD;
+        int wordsInUse = this->length;
 
-    return (wordIndex < wordsInUse) && ((this->words[wordIndex] & (1 << bitIndex)) != 0);
+        return (wordIndex < wordsInUse) && ((this->words[wordIndex] & (1 << bitIndex)) != 0);
 }
 
 method void method Clear(CFBitVectorRef this, int bitIndex)
 {
-    if (bitIndex == -1) {
-        int wordsInUse = this->length;
-        while (wordsInUse > 0) {
-            this->words[--wordsInUse] = 0;
+        if (bitIndex == -1) {
+                int wordsInUse = this->length;
+                while (wordsInUse > 0) {
+                        this->words[--wordsInUse] = 0;
+                }
+                return;
         }
-        return;
-    }
 
-    int wordIndex = bitIndex >> ADDRESS_BITS_PER_WORD;
-    if (this->length <= wordIndex) {
-        this->words = realloc(this->words, sizeof(unsigned int) * (size_t)(wordIndex + 1));
-        // this = realloc(this, sizeof(CFObject) + sizeof(int) + sizeof(unsigned int) * wordIndex + 1);
-    }
-    this->words[wordIndex] &= ~(1 << bitIndex);
+        int wordIndex = bitIndex >> ADDRESS_BITS_PER_WORD;
+        if (this->length <= wordIndex) {
+                this->words = realloc(this->words, sizeof(unsigned int) * (size_t)(wordIndex + 1));
+                // this = realloc(this, sizeof(CFObject) + sizeof(int) + sizeof(unsigned int) * wordIndex + 1);
+        }
+        this->words[wordIndex] &= ~(1 << bitIndex);
 }
 
 method void method Clear(CFBitVectorRef this)
 {
-    Clear(this, -1);
+        Clear(this, -1);
 }
 
 /**
@@ -193,13 +193,13 @@ method void method Clear(CFBitVectorRef this)
  */
 method char* ToString(CFBitVectorRef this)
 {
-    (void*)this;
-    return "CFBitVector";
-    //     string[] s = new string[words.length];
-    //     for (var i=0; i<words.length; i++)
-    //     {
-    //         s[i] = "0x%08x".printf(words[i]);
-    //     }
-    //     return string.joinv("|", s);
-    // }
+        (void*)this;
+        return "CFBitVector";
+        //         string[] s = new string[words.length];
+        //         for (var i=0; i<words.length; i++)
+        //         {
+        //                 s[i] = "0x%08x".printf(words[i]);
+        //         }
+        //         return string.joinv("|", s);
+        // }
 }

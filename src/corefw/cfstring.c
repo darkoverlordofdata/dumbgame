@@ -6,10 +6,10 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ *        this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ *        this list of conditions and the following disclaimer in the documentation
+ *        and/or other materials provided with the distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -41,28 +41,28 @@ struct __CFString {
 // method CFStringRef NewString()
 // {
 	
-//     return CFNew(CFString, NULL);
+//         return CFNew(CFString, NULL);
 // }
 
 method CFStringRef NewString(char* value)
 {
-    return CFNew(CFString, value);    
+        return CFNew(CFString, value);        
 }
 
 method char* cstr(CFStringRef this)
 {
-    return CFStringC(this);
+        return CFStringC(this);
 }
 
 method char* ToString(CFStringRef this)
 {
-    return CFStringC(this);
+        return CFStringC(this);
 }
 
 
 method int Length(CFStringRef this)
 {
-    return (int)CFStringLength(this);
+        return (int)CFStringLength(this);
 }
 
 
@@ -340,7 +340,7 @@ CFStringFind(CFStringRef str, CFStringRef substr, CFRange_t range)
 		return SIZE_MAX;
 
 	for (i = range.start; i <= range.start + range.length - substr->len;
-	    i++)
+	        i++)
 		if (!memcmp(str->data + i, substr->data, substr->len))
 			return i;
 
@@ -363,7 +363,7 @@ CFStringFindC(CFStringRef str, const char *substr, CFRange_t range)
 		return SIZE_MAX;
 
 	for (i = range.start; i <= range.start + range.length - substr_len;
-	    i++)
+	        i++)
 		if (!memcmp(str->data + i, substr, substr_len))
 			return i;
 
@@ -379,32 +379,32 @@ CFStringFindC(CFStringRef str, const char *substr, CFRange_t range)
  */
 char* CFStringJoin(int count, ...)
 {
-    
-    int size = 0;
-    va_list args1;
-    va_start(args1, count);
-    va_list args2;
-    va_copy(args2, args1);  
+        
+        int size = 0;
+        va_list args1;
+        va_start(args1, count);
+        va_list args2;
+        va_copy(args2, args1);    
 
-    /**
-     * Caclulate length of the result string
-     */
-    for (int i = 0; i < count; ++i) {
-        char* str = va_arg(args1, char*);
-        size += strlen(str);
-    }
-    va_end(args1);
-    char* result = (char*)calloc(((size_t)(size+1)),  sizeof(char));
+        /**
+         * Caclulate length of the result string
+         */
+        for (int i = 0; i < count; ++i) {
+                char* str = va_arg(args1, char*);
+                size += strlen(str);
+        }
+        va_end(args1);
+        char* result = (char*)calloc(((size_t)(size+1)),    sizeof(char));
 
-    /**
-     * Now build the result string
-     */
-    for (int i = 0; i < count; ++i) {
-        char* str = va_arg(args2, char*);
-        strcat(result, str);
-    }
-    va_end(args2);
-    return result;
+        /**
+         * Now build the result string
+         */
+        for (int i = 0; i < count; ++i) {
+                char* str = va_arg(args2, char*);
+                strcat(result, str);
+        }
+        va_end(args2);
+        return result;
 }
 
 static struct __CFClass class = {

@@ -1,6 +1,6 @@
 ///////////////////////////////////////////////////////////////////////////////
 // \author (c) Marco Paland (info@paland.com)
-//             2014-2019, PALANDesign Hannover, Germany
+//                         2014-2019, PALANDesign Hannover, Germany
 //
 // \license The MIT License (MIT)
 //
@@ -23,9 +23,9 @@
 // THE SOFTWARE.
 //
 // \brief Tiny printf, sprintf and snprintf implementation, optimized for speed on
-//        embedded systems with a very limited resources.
-//        Use this instead of bloated standard/newlib printf.
-//        These routines are thread safe and reentrant.
+//                embedded systems with a very limited resources.
+//                Use this instead of bloated standard/newlib printf.
+//                These routines are thread safe and reentrant.
 //
 ///////////////////////////////////////////////////////////////////////////////
 
@@ -79,12 +79,12 @@ int sprintf_(char* buffer, const char* format, ...);
  * \param format A string that specifies the format of the output
  * \param va A value identifying a variable arguments list
  * \return The number of characters that COULD have been written into the buffer, not counting the terminating
- *         null character. A value equal or larger than count indicates truncation. Only when the returned value
- *         is non-negative and less than count, the string has been completely written.
+ *                 null character. A value equal or larger than count indicates truncation. Only when the returned value
+ *                 is non-negative and less than count, the string has been completely written.
  */
-#define snprintf  snprintf_
+#define snprintf    snprintf_
 #define vsnprintf vsnprintf_
-int  snprintf_(char* buffer, size_t count, const char* format, ...);
+int    snprintf_(char* buffer, size_t count, const char* format, ...);
 int vsnprintf_(char* buffer, size_t count, const char* format, va_list va);
 
 
@@ -114,4 +114,4 @@ int fctprintf(void (*out)(char character, void* arg), void* arg, const char* for
 #endif
 
 
-#endif  // _PRINTF_H_
+#endif    // _PRINTF_H_

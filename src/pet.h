@@ -6,19 +6,37 @@
 
 typedef struct __Pet* PetRef;
 extern CFClassRef Pet;
-typedef struct __PetDataRef*    PetDataRef;
+typedef struct __Game*            GameRef;
 
+typedef enum PetType: unsigned int {
+    PetBrainWorm
+} PetType;
 
-struct __Pet {
-    struct __CFObject obj;
-    PetDataRef data;
-    long    x;
-    long    y;
-    
+// max 1024 bytes
+struct pet_data {
+    PetType type;
+    uint32_t magic;
+    char    name[20];
+    long    age;     
+    long    hunger;
+    long    happiness;
+    long    money;
 
 };
 
-PetRef method Ctor(PetRef, char*);
+struct __Pet {
+    struct __CFObject obj;
+    GameRef     game;
+    uint8_t*    data;
+    int32_t     x;
+    int32_t     y;    
+    uint32_t    width;
+    uint32_t    height;                                                    
+    uint32_t    flags;
+    struct pet_data pet;
+};
+
+PetRef method Ctor(PetRef, GameRef);
 
 void method Initialize(PetRef);
 void method Update(PetRef);
@@ -27,7 +45,7 @@ void method Move(PetRef, long, long);
 long method GetWidth(PetRef);
 long method GetHeight(PetRef);
 
-static inline PetRef NewPet(char* name)
+static inline PetRef NewPet(GameRef game)
 {
-    return Ctor((PetRef)CFCreate(Pet), name);
+    return Ctor((PetRef)CFCreate(Pet), game);
 }

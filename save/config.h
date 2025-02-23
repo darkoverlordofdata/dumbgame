@@ -11,31 +11,6 @@ extern CFClassRef Config;
 
 typedef struct __Game* GameRef;
 
-typedef struct { int x, y; } Keyplace;
-
-typedef enum {
-    Widget_Delete,
-    Widget_Clear,
-    Widget_Done,
-    Widget_Keyboard,
-    Widget_COUNT,   
-} Widget;
-
-typedef enum {
-    Modal_Widgets,
-    Modal_KeyboardOpen,
-    Modal_TypeSomething,
-} Modal;
-
-typedef struct {
-    Widget      w_select; /* selected widget */
-    Modal       modal;
-    Keyplace    kb_select;
-    char        input[4];
-    int         input_len;
-    uint8_t     button_cooldown[6];
-} State;
-
 struct __Config {
     struct __CFObject obj;
 
@@ -46,7 +21,6 @@ struct __Config {
     uint32_t    height;
     uint32_t    flags;
     int         tick;
-    State       state;
 };
     
 ConfigRef method Ctor(ConfigRef, GameRef);

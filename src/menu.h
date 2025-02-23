@@ -36,7 +36,7 @@ struct MenuItem {
     uint32_t height;
     const uint8_t* data;
     MenuHandler proc;
-};  
+};    
 
 
 MenuRef method Ctor(MenuRef, GameRef);

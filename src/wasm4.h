@@ -12,18 +12,18 @@ WASM_EXPORT("start") void start ();
 WASM_EXPORT("update") void update ();
 
 // ┌───────────────────────────────────────────────────────────────────────────┐
-// │                                                                           │
-// │ Platform Constants                                                        │
-// │                                                                           │
+// │                                                                                                                                                     │
+// │ Platform Constants                                                                                                                │
+// │                                                                                                                                                     │
 // └───────────────────────────────────────────────────────────────────────────┘
 
 #define SCREEN_SIZE 160
 #define FONT_SIZE 8
 
 // ┌───────────────────────────────────────────────────────────────────────────┐
-// │                                                                           │
-// │ Memory Addresses                                                          │
-// │                                                                           │
+// │                                                                                                                                                     │
+// │ Memory Addresses                                                                                                                    │
+// │                                                                                                                                                     │
 // └───────────────────────────────────────────────────────────────────────────┘
 
 #define PALETTE ((uint32_t*)0x04)
@@ -54,9 +54,9 @@ WASM_EXPORT("update") void update ();
 #define SYSTEM_HIDE_GAMEPAD_OVERLAY 2
 
 // ┌───────────────────────────────────────────────────────────────────────────┐
-// │                                                                           │
-// │ Drawing Functions                                                         │
-// │                                                                           │
+// │                                                                                                                                                     │
+// │ Drawing Functions                                                                                                                 │
+// │                                                                                                                                                     │
 // └───────────────────────────────────────────────────────────────────────────┘
 
 /** Copies pixels to the framebuffer. */
@@ -66,7 +66,7 @@ void blit (const uint8_t* data, int32_t x, int32_t y, uint32_t width, uint32_t h
 /** Copies a subregion within a larger sprite atlas to the framebuffer. */
 WASM_IMPORT("blitSub")
 void blitSub (const uint8_t* data, int32_t x, int32_t y, uint32_t width, uint32_t height,
-    uint32_t srcX, uint32_t srcY, uint32_t stride, uint32_t flags);
+        uint32_t srcX, uint32_t srcY, uint32_t stride, uint32_t flags);
 
 #define BLIT_2BPP 1
 #define BLIT_1BPP 0
@@ -99,9 +99,9 @@ WASM_IMPORT("text")
 void text (const char* text, int32_t x, int32_t y);
 
 // ┌───────────────────────────────────────────────────────────────────────────┐
-// │                                                                           │
-// │ Sound Functions                                                           │
-// │                                                                           │
+// │                                                                                                                                                     │
+// │ Sound Functions                                                                                                                     │
+// │                                                                                                                                                     │
 // └───────────────────────────────────────────────────────────────────────────┘
 
 /** Plays a sound tone. */
@@ -121,9 +121,9 @@ void tone (uint32_t frequency, uint32_t duration, uint32_t volume, uint32_t flag
 #define TONE_NOTE_MODE 64
 
 // ┌───────────────────────────────────────────────────────────────────────────┐
-// │                                                                           │
-// │ Storage Functions                                                         │
-// │                                                                           │
+// │                                                                                                                                                     │
+// │ Storage Functions                                                                                                                 │
+// │                                                                                                                                                     │
 // └───────────────────────────────────────────────────────────────────────────┘
 
 /** Reads up to `size` bytes from persistent storage into the pointer `dest`. */

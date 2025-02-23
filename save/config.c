@@ -18,6 +18,30 @@ static Keyboard_Row keyboard[] = {
     {   "zxcvbnm",  7,   14}
 };
 
+typedef struct { int x, y; } Keyplace;
+
+typedef enum {
+    Widget_Delete,
+    Widget_Clear,
+    Widget_Done,
+    Widget_Keyboard,
+    Widget_COUNT,
+} Widget;
+
+typedef enum {
+    Modal_Widgets,
+    Modal_KeyboardOpen,
+    Modal_TypeSomething,
+} Modal;
+
+typedef struct {
+    Widget      w_select; /* selected widget */
+    Modal       modal;
+    Keyplace    kb_select;
+    char        input[4];
+    int         input_len;
+    uint8_t     button_cooldown[6];
+} State;
 
 /**
  * Config 
@@ -43,6 +67,7 @@ ConfigRef method Ctor(ConfigRef this, GameRef game)
 }
 
 
+static State state;
 static const int kbrows = 3;
 
 static int mod(int x, int n) {
@@ -71,16 +96,16 @@ static uint8_t keyplace_eq(Keyplace a, Keyplace b) {
     return a.x == b.x && a.y == b.y;
 }
 
-static uint8_t button_tap(ConfigRef this, uint8_t button) {
+static uint8_t button_tap(uint8_t button) {
     uint8_t gamepad = *GAMEPAD1;
     uint8_t *cooldown = 0;
 
-    if (button == BUTTON_1    ) cooldown = this->state.button_cooldown + 0;
-    if (button == BUTTON_2    ) cooldown = this->state.button_cooldown + 1;
-    if (button == BUTTON_LEFT ) cooldown = this->state.button_cooldown + 2;
-    if (button == BUTTON_RIGHT) cooldown = this->state.button_cooldown + 3;
-    if (button == BUTTON_UP   ) cooldown = this->state.button_cooldown + 4;
-    if (button == BUTTON_DOWN ) cooldown = this->state.button_cooldown + 5;
+    if (button == BUTTON_1    ) cooldown = state.button_cooldown + 0;
+    if (button == BUTTON_2    ) cooldown = state.button_cooldown + 1;
+    if (button == BUTTON_LEFT ) cooldown = state.button_cooldown + 2;
+    if (button == BUTTON_RIGHT) cooldown = state.button_cooldown + 3;
+    if (button == BUTTON_UP   ) cooldown = state.button_cooldown + 4;
+    if (button == BUTTON_DOWN ) cooldown = state.button_cooldown + 5;
 
     if (*cooldown > 0) *cooldown = *cooldown - 1;
 
@@ -103,7 +128,7 @@ void method Update(ConfigRef this)
     (ConfigRef)this;
     this->tick++;
 
-    if (this->state.modal == Modal_TypeSomething) {
+    if (state.modal == Modal_TypeSomething) {
         text(
             "     Please type at     \n"
             "least one character.\n" 
@@ -112,23 +137,23 @@ void method Update(ConfigRef this)
             "     \x80=continue    \n",
             0, 60
         );
-        if (*GAMEPAD1 > 0 && this->tick > 20) this->state.modal = Modal_Widgets;
+        if (*GAMEPAD1 > 0 && this->tick > 20) state.modal = Modal_Widgets;
         return;
     }
     
     uint16_t select_color = ((this->tick/10)%3 == 0) ? 4 : 3;
     
     {
-        uint32_t len = sizeof(this->state.input)-2;
+        uint32_t len = sizeof(state.input)-2;
         int x = SCREEN_SIZE/2 - len*8/2;
     
         *DRAW_COLORS = 0x20;
         rect(x-2, 40-3, len*12+4, 8+5);
     
         *DRAW_COLORS = select_color;
-        this->state.input[this->state.input_len] = (select_color == 4) ? '|' : '\0';
-        this->state.input[3] = '\0';
-        text(this->state.input, x, 40);
+        state.input[state.input_len] = (select_color == 4) ? '|' : '\0';
+        state.input[3] = '\0';
+        text(state.input, x, 40);
     }
     
     *DRAW_COLORS = 4;
@@ -136,28 +161,28 @@ void method Update(ConfigRef this)
         int x = 0;
         char *str = keyboard[y].str;
         while (*str) {
-            char tmp[2] = { *str };
-            Keyplace kp = { x, y };
-            iVec2 px_pos = keyplace_to_px(kp);
-        
-            if (this->state.modal != Modal_KeyboardOpen)
-                *DRAW_COLORS = 3;
-            else if (keyplace_eq(kp, this->state.kb_select))
-                *DRAW_COLORS = select_color;
-            else
-                *DRAW_COLORS = 2;
-            text(tmp, px_pos.x, px_pos.y);
-        
-            str++, x++;
+        char tmp[2] = { *str };
+        Keyplace kp = { x, y };
+        iVec2 px_pos = keyplace_to_px(kp);
+    
+        if (state.modal != Modal_KeyboardOpen)
+            *DRAW_COLORS = 3;
+        else if (keyplace_eq(kp, state.kb_select))
+            *DRAW_COLORS = select_color;
+        else
+            *DRAW_COLORS = 2;
+        text(tmp, px_pos.x, px_pos.y);
+    
+        str++, x++;
         }
     }
     
     char *help = 0;
     
-    if (this->state.modal == Modal_KeyboardOpen) {
+    if (state.modal == Modal_KeyboardOpen) {
         *DRAW_COLORS = 0x30;
         help = "\x80=stop    \x81=type";
-    } else if (this->state.w_select == Widget_Keyboard) {
+    } else if (state.w_select == Widget_Keyboard) {
         *DRAW_COLORS = (uint16_t) (select_color << 4);
         help = "\x80=start typing";
     } else
@@ -165,17 +190,17 @@ void method Update(ConfigRef this)
     rect(2, 96, 156, 44);
     
     *DRAW_COLORS = 2;
-    if (this->state.w_select == Widget_Delete)
+    if (state.w_select == Widget_Delete)
         *DRAW_COLORS = select_color, help = "\x80=delete";
     text("delete",     5, 80);
     
     *DRAW_COLORS = 2;
-    if (this->state.w_select == Widget_Clear)
+    if (state.w_select == Widget_Clear)
         *DRAW_COLORS = select_color, help = "\x80=clear";
     text("clear",    67, 80);
     
     *DRAW_COLORS = 2;
-    if (this->state.w_select == Widget_Done)
+    if (state.w_select == Widget_Done)
         *DRAW_COLORS = select_color, help = "\x80=finish";
     text("done", 120, 80);
     
@@ -184,33 +209,33 @@ void method Update(ConfigRef this)
     
     
     
-    if (this->state.modal == Modal_KeyboardOpen) {
+    if (state.modal == Modal_KeyboardOpen) {
     
-        if (button_tap(this, BUTTON_RIGHT )) this->state.kb_select.x++;
-        if (button_tap(this, BUTTON_LEFT  )) this->state.kb_select.x--;
-        if (button_tap(this, BUTTON_UP    )) this->state.kb_select.y--;
-        if (button_tap(this, BUTTON_DOWN  )) this->state.kb_select.y++;
+        if (button_tap(BUTTON_RIGHT )) state.kb_select.x++;
+        if (button_tap(BUTTON_LEFT  )) state.kb_select.x--;
+        if (button_tap(BUTTON_UP    )) state.kb_select.y--;
+        if (button_tap(BUTTON_DOWN  )) state.kb_select.y++;
     
-        if (button_tap(this, BUTTON_1     )) this->state.modal = Modal_Widgets;
-        if (button_tap(this, BUTTON_2     ) && this->state.input_len < (int)sizeof(this->state.input))
-            this->state.input[this->state.input_len++] = keyplace_char(this->state.kb_select);
-        this->state.kb_select = keyplace_normalize(this->state.kb_select);
+        if (button_tap(BUTTON_1     )) state.modal = Modal_Widgets;
+        if (button_tap(BUTTON_2     ) && state.input_len < (int)sizeof(state.input))
+            state.input[state.input_len++] = keyplace_char(state.kb_select);
+        state.kb_select = keyplace_normalize(state.kb_select);
 
     } else {
-        if (button_tap(this, BUTTON_UP    )) this->state.w_select--;
-        if (button_tap(this, BUTTON_DOWN  )) this->state.w_select++;
-        if (button_tap(this, BUTTON_1     )) {
-            if (this->state.w_select == Widget_Clear)    this->state.input_len = 0;
-            if (this->state.w_select == Widget_Delete) this->state.input_len--;
-            if (this->state.w_select == Widget_Keyboard)
-                this->state.modal = Modal_KeyboardOpen;
-            if (this->state.w_select == Widget_Done) {
+        if (button_tap(BUTTON_UP    )) state.w_select--;
+        if (button_tap(BUTTON_DOWN  )) state.w_select++;
+        if (button_tap(BUTTON_1     )) {
+            if (state.w_select == Widget_Clear)    state.input_len = 0;
+            if (state.w_select == Widget_Delete) state.input_len--;
+            if (state.w_select == Widget_Keyboard)
+                state.modal = Modal_KeyboardOpen;
+            if (state.w_select == Widget_Done) {
                 trace("Done?");
-                if (this->state.input_len == 0)
-                this->tick = 0, this->state.modal = Modal_TypeSomething;
+                if (state.input_len == 0)
+                this->tick = 0, state.modal = Modal_TypeSomething;
             }
         }
-        this->state.w_select = (Widget)mod((int)this->state.w_select, Widget_COUNT);
+        state.w_select = (Widget)mod((int)state.w_select, Widget_COUNT);
     }
     
 

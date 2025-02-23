@@ -7,10 +7,10 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ *        this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ *        this list of conditions and the following disclaimer in the documentation
+ *        and/or other materials provided with the distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -46,27 +46,27 @@ method void Clear(CFArrayRef this)
 
 	if (this->data != NULL)
 		free(this->data);
-    this->size = 0;
+        this->size = 0;
 }
 
 method void* Get(CFArrayRef this, size_t i)
 {
-    return CFArrayGet(this, i);
+        return CFArrayGet(this, i);
 }
 
 method void Add(CFArrayRef this, void* item)
 {
-    CFArrayPush(this, item);
+        CFArrayPush(this, item);
 }
 
 method void Put(CFArrayRef this, size_t index, void* object)
 {
-    CFArraySet(this, index, object);
+        CFArraySet(this, index, object);
 }
 
 method size_t Length(CFArrayRef this)
 {
-    return CFArraySize(this);
+        return CFArraySize(this);
 }
 
 static bool

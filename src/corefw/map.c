@@ -6,10 +6,10 @@
  * modification, are permitted provided that the following conditions are met:
  *
  * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
+ *        this list of conditions and the following disclaimer.
  * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
+ *        this list of conditions and the following disclaimer in the documentation
+ *        and/or other materials provided with the distribution.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -46,29 +46,29 @@ struct __CFMap {
 
 method void* Get(CFMapRef this, char* key)
 {
-    return CFMapGet(this, key);
+        return CFMapGet(this, key);
 }
 
 method bool Remove(CFMapRef this, char* key)
 {
-    return CFMapSet(this, key, NULL);
+        return CFMapSet(this, key, NULL);
 }
 
 method void Put(CFMapRef this, char* key, void* object)
 {
-    CFMapSet(this, key, object);
+        CFMapSet(this, key, object);
 }
 
 
 method void ForEach(CFMapRef this, void(*func)(void* key, void* item))
 {
-   CFMapIter_t iter;
+     CFMapIter_t iter;
 
-    CFMapIter(this, &iter);
-    while (iter.key != NULL) {
-        func(iter.key, iter.obj);
-        CFMapIterNext(&iter);
-    }
+        CFMapIter(this, &iter);
+        while (iter.key != NULL) {
+                func(iter.key, iter.obj);
+                CFMapIterNext(&iter);
+        }
 }
 
 static bool
@@ -124,8 +124,8 @@ equal(void *ptr1, void *ptr2)
 
 	for (i = 0; i < map1->size; i++)
 		if (map1->data[i] != NULL && map1->data[i] != &deleted &&
-		    !CFEqual(CFMapGet(map2, map1->data[i]->key),
-		    map1->data[i]->obj))
+		        !CFEqual(CFMapGet(map2, map1->data[i]->key),
+		        map1->data[i]->obj))
 			return false;
 
 	return true;
@@ -256,7 +256,7 @@ CFMapGet(CFMapRef map, void *key)
 	last = map->size;
 
 	for (i = hash & (map->size - 1);
-	    i < last && map->data[i] != NULL; i++) {
+	        i < last && map->data[i] != NULL; i++) {
 		if (map->data[i] == &deleted)
 			continue;
 
@@ -318,7 +318,7 @@ CFMapSet(CFMapRef map, void *key, void *obj)
 	last = map->size;
 
 	for (i = hash & (map->size - 1);
-	    i < last && map->data[i] != NULL; i++) {
+	        i < last && map->data[i] != NULL; i++) {
 		if (map->data[i] == &deleted)
 			continue;
 
@@ -341,7 +341,7 @@ CFMapSet(CFMapRef map, void *key, void *obj)
 
 	/* Key not in dictionary */
 	if (i >= last || map->data[i] == NULL || map->data[i] == &deleted ||
-	    !CFEqual(map->data[i]->key, key)) {
+	        !CFEqual(map->data[i]->key, key)) {
 		struct bucket *bucket;
 
 		if (obj == NULL)
@@ -353,14 +353,14 @@ CFMapSet(CFMapRef map, void *key, void *obj)
 		last = map->size;
 
 		for (i = hash & (map->size - 1); i < last &&
-		    map->data[i] != NULL && map->data[i] != &deleted; i++);
+		        map->data[i] != NULL && map->data[i] != &deleted; i++);
 
 		/* In case the last bucket is already used */
 		if (i >= last) {
 			last = hash & (map->size - 1);
 
 			for (i = 0; i < last && map->data[i] != NULL &&
-			    map->data[i] != &deleted; i++);
+			        map->data[i] != &deleted; i++);
 		}
 
 		if (i >= last)
@@ -434,8 +434,8 @@ CFMapIterNext(CFMapIter_t *iter)
 	CFMapRef map = iter->_map;
 
 	for (; iter->_pos < map->size &&
-	    (map->data[iter->_pos] == NULL ||
-	    map->data[iter->_pos] == &deleted); iter->_pos++);
+	        (map->data[iter->_pos] == NULL ||
+	        map->data[iter->_pos] == &deleted); iter->_pos++);
 
 	if (iter->_pos < map->size) {
 		iter->key = map->data[iter->_pos]->key;
