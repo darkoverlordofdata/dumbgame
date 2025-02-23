@@ -2,25 +2,26 @@
 #include "corefw/cfstring.h"
 #include "corefw/class.h"
 #include "corefw/corefw.h" // IWYU pragma: keep
+#include "pet_data.h"
 
 typedef struct __PetData* PetDataRef;
 extern CFClassRef PetData;
 
-typedef enum PetType: unsigned int {
-    PetBrainWorm
-} PetType;
+// typedef enum PetType: unsigned int {
+//     PetBrainWorm
+// } PetType;
 
 
-// max 1024 bytes
-struct pet_data {
-    PetType type;
-    char name[20];
-    long    age;   
-    long    hunger;
-    long    happiness;
-    long    money;
+// // max 1024 bytes
+// struct pet_data {
+//     PetType type;
+//     char name[20];
+//     long    age;   
+//     long    hunger;
+//     long    happiness;
+//     long    money;
 
-};
+// };
 
 struct __PetData {
     struct __CFObject obj;

@@ -1,4 +1,5 @@
 #include "game.h"
+#include "config.h"
 #include "corefw/object.h"
 #include "corefw/random.h"
 #include "menu.h"
@@ -20,10 +21,12 @@ GameRef method Ctor(GameRef this) {
     this->first = true;
     this->state = GameStateSplashScreen;
     this->frameCounter = 0;
-    this->splash = NewSplash();
+    this->splash = NewSplash(this);
     this->menu = NewMenu(this);
+    this->config = NewConfig(this);
     return this;
 }
+
 
 void method Start(GameRef this) {
     (void *)this;
@@ -56,9 +59,15 @@ void method Update(GameRef this) {
             tracef("frameCounter=%d", (int)this->frameCounter);
             this->rnd = NewRandom(frameCounter);
             this->first = false;
-            this->pet = NewPet("frodo");
-            this->state = GameStateRunning;
+            // this->pet = NewPet("frodo");
+            this->state = GameStateInputName;
         }
+        break;
+
+    case GameStateInputName:
+        // diskr(&this->data, sizeof(this->data));
+        Update(this->config);
+        // this->state = GameStateRunning;
         break;
 
     case GameStateRunning:
@@ -84,6 +93,9 @@ void method Draw(GameRef this) {
         text("X - Play", 80, 70);
         text("Y - Opts", 80, 85);
 
+        break;
+
+    case GameStateInputName:
         break;
 
     case GameStateRunning:

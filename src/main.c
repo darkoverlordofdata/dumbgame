@@ -13,7 +13,7 @@ bool first = true;
 
 void start() {
 	pool = CFNew(CFRefPool);
-    game = CFCreate(Game);
+    game = NewGame();
     Start(game);
 
 }
