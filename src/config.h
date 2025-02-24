@@ -1,4 +1,11 @@
-#pragma once
+/**
+ * Config
+ *
+ * get the pet name
+ *
+ * @see https://wasm4.org/play/text-input
+ */
+ #pragma once
 #include "corefw/cfstring.h"
 #include "corefw/class.h"
 #include "corefw/corefw.h" // IWYU pragma: keep
@@ -31,7 +38,7 @@ typedef struct {
     Widget      w_select; /* selected widget */
     Modal       modal;
     Keyplace    kb_select;
-    char        input[4];
+    char        input[6];
     int         input_len;
     uint8_t     button_cooldown[6];
 } State;
@@ -39,11 +46,12 @@ typedef struct {
 struct __Config {
     struct __CFObject obj;
 
+    GameRef     game;
     uint8_t*    data;
-    long        x;
-    long        y;    
+    int32_t     x;
+    int32_t     y;    
     uint32_t    width;
-    uint32_t    height;
+    uint32_t    height;                                                    
     uint32_t    flags;
     int         tick;
     State       state;

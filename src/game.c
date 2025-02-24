@@ -7,9 +7,6 @@
 #include "splash.h"
 #include "wasm4.h"
 
-static uint32_t darkoverlordofdata = 0xd16a; // big if true!
-
-
 static struct __CFClass class = {
     .name = "Game",
     .size = sizeof(struct __Game),
@@ -27,6 +24,7 @@ GameRef method Ctor(GameRef this) {
     this->splash = NewSplash(this);
     this->menu = NewMenu(this);
     this->config = NewConfig(this);
+    diskr(&this->data, sizeof(this->data));
     return this;
 }
 
@@ -34,11 +32,10 @@ void method Start(GameRef this) {
     (void *)this;
 
     // https://lospec.com/palette-list/ice-cream-gb
-    PALETTE[0] = 0xfff6d3;
-    PALETTE[1] = 0xf9a875;
-    PALETTE[2] = 0xeb6b6f;
-    PALETTE[3] = 0x7c3f58;
-    diskr(&this->data, sizeof(this->data));
+    // PALETTE[0] = 0xfff6d3;
+    // PALETTE[1] = 0xf9a875;
+    // PALETTE[2] = 0xeb6b6f;
+    // PALETTE[3] = 0x7c3f58;
 }
 
 uint8_t method PressedThisFrame(GameRef this) {
@@ -59,19 +56,15 @@ void method Update(GameRef this) {
         if (PressedThisFrame(this) & BUTTON_1) {
             tracef("frameCounter=%d", (int)this->frameCounter);
             this->rnd = NewRandom(frameCounter);
-            diskr(&this->data, sizeof(this->data));
+            tracef("name %s", this->data.name);
+            tracef("magic %x", this->data.magic);
             this->first = false;
             this->state = GameStateInputName;
         }
     break;
 
     case GameStateInputName:
-        if (this->data.magic != darkoverlordofdata) {
-            Update(this->config);
-        } else {
-            this->pet = NewPet(this);
-            this->state = GameStateRunning;
-        }
+        Update(this->config);
         break;
 
     case GameStateRunning:
@@ -104,7 +97,7 @@ void method Draw(GameRef this) {
     case GameStateRunning:
         Draw(this->menu);
         *DRAW_COLORS = 0x0312;
-        // Draw(this->pet);
+        Draw(this->pet);
         break;
 
     case GameStateEnd:

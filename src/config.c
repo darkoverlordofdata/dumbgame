@@ -1,7 +1,15 @@
-#include "corefw/cfstring.h"
+/**
+ * Config
+ *
+ * get the pet name
+ *
+ * @see https://wasm4.org/play/text-input
+ */
+ #include "corefw/cfstring.h"
 #include "wasm4.h"
 #include "corefw/corefw.h" // IWYU pragma: keep
 #include "config.h"
+#include "game.h"
 
 static struct __CFClass class = {
 	.name = "Config",
@@ -9,15 +17,17 @@ static struct __CFClass class = {
 };
 CFClassRef Config = &class;
 
+static Keyplace keyplace_normalize(Keyplace kp);
 typedef struct { int x, y; } iVec2;
 typedef struct { char *str; int strlen; int offset_px; } Keyboard_Row;
 
 static Keyboard_Row keyboard[] = {
-    {"qwertyuiop", 10,    5},
-    { "asdfghjkl",  9,    8},
-    {   "zxcvbnm",  7,   14}
+    {"qwertyuiop", 11,    5},
+    { "asdfghjkl", 10,    8},
+    {   "zxcvbnm",  8,   14}
 };
 
+static uint32_t darkoverlordofdata = 0xd16a; // big if true!
 
 /**
  * Config 
@@ -31,6 +41,7 @@ ConfigRef method Ctor(ConfigRef this, GameRef game)
     (ConfigRef)this;
     (GameRef)game;
 
+    this->game = game;
     this->x = 0;
     this->y = 0;
     this->height = 0;
@@ -38,19 +49,29 @@ ConfigRef method Ctor(ConfigRef this, GameRef game)
     this->data = NULL;
     this->flags = 0;
     this->tick = 0;
+
+    // reset the state:
+    this->state.w_select = Widget_Keyboard;
+    this->state.modal = 0;
+    this->state.kb_select.x = 0;
+    this->state.kb_select.y = 0;
+    // this->state.kb_select = keyplace_normalize(this->state.kb_select);
     
+    for (int i=0; i<6; i++)
+        this->state.input[i] = 0;
+    this->state.input_len = 0;
+    for (int i=0; i<6; i++)
+        this->state.button_cooldown[i] = 0;
     return this;
 }
 
-
-static const int kbrows = 3;
 
 static int mod(int x, int n) {
     return ((x % n) + n) % n;
 }
 static Keyplace keyplace_normalize(Keyplace kp) {
     int old_y = kp.y;
-    kp.y = mod(kp.y, kbrows);
+    kp.y = mod(kp.y, 3);
 
     Keyboard_Row *row = keyboard + kp.y;
     kp.x = mod(kp.x, row->strlen-1);
@@ -103,13 +124,21 @@ void method Update(ConfigRef this)
     (ConfigRef)this;
     this->tick++;
 
+    if (this->game->data.magic == darkoverlordofdata) {
+        this->game->pet = NewPet(this->game);
+        this->game->state = GameStateRunning;
+        return;
+    }
+
+    text("enter name", 35, 10);
+    text(this->game->data.name, 40, 20);
     if (this->state.modal == Modal_TypeSomething) {
         text(
-            "     Please type at     \n"
+            "   Please type at   \n"
             "least one character.\n" 
             "                    \n"
             "                    \n"
-            "     \x80=continue    \n",
+            "     \x80=continue  \n",
             0, 60
         );
         if (*GAMEPAD1 > 0 && this->tick > 20) this->state.modal = Modal_Widgets;
@@ -127,12 +156,12 @@ void method Update(ConfigRef this)
     
         *DRAW_COLORS = select_color;
         this->state.input[this->state.input_len] = (select_color == 4) ? '|' : '\0';
-        this->state.input[3] = '\0';
+        this->state.input[5] = '\0';
         text(this->state.input, x, 40);
     }
     
     *DRAW_COLORS = 4;
-    for (int y = 0; y < kbrows; y++) {
+    for (int y = 0; y < 3; y++) {
         int x = 0;
         char *str = keyboard[y].str;
         while (*str) {
@@ -167,12 +196,12 @@ void method Update(ConfigRef this)
     *DRAW_COLORS = 2;
     if (this->state.w_select == Widget_Delete)
         *DRAW_COLORS = select_color, help = "\x80=delete";
-    text("delete",     5, 80);
+    text("delete", 5, 80);
     
     *DRAW_COLORS = 2;
     if (this->state.w_select == Widget_Clear)
         *DRAW_COLORS = select_color, help = "\x80=clear";
-    text("clear",    67, 80);
+    text("clear", 67, 80);
     
     *DRAW_COLORS = 2;
     if (this->state.w_select == Widget_Done)
@@ -206,8 +235,20 @@ void method Update(ConfigRef this)
                 this->state.modal = Modal_KeyboardOpen;
             if (this->state.w_select == Widget_Done) {
                 trace("Done?");
-                if (this->state.input_len == 0)
-                this->tick = 0, this->state.modal = Modal_TypeSomething;
+                if (this->state.input_len == 0) {
+                    this->tick = 0, this->state.modal = Modal_TypeSomething;
+                }
+                else {
+                    trace("Done!");
+                    for (int i=0; i<5; i++) {
+                        this->game->data.name[i] = this->state.input[i];
+                    }
+                    this->game->data.name[5] = 0;
+                    trace(this->game->data.name);
+                    this->game->data.magic = darkoverlordofdata;
+                    diskw(&this->game->data, sizeof(this->game->data));
+        
+                }
             }
         }
         this->state.w_select = (Widget)mod((int)this->state.w_select, Widget_COUNT);

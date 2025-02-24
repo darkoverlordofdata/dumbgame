@@ -20,17 +20,17 @@ typedef enum GameState: unsigned int {
 
 struct __Game {
     struct __CFObject obj;
-    CFStringRef title;
-    GameState state;
-    SplashRef splash;
-    MenuRef menu;
-    PetRef pet;
-    ConfigRef config;
-    bool first;
-    unsigned long frameCounter;
-    uint8_t previousGamepad;
-    CFRandomRef rnd;
-    struct pet_data data;
+    CFStringRef         title;
+    GameState           state;
+    SplashRef           splash;
+    MenuRef             menu;
+    PetRef              pet;
+    ConfigRef           config;
+    CFRandomRef         rnd;
+    bool                first;
+    unsigned long       frameCounter;
+    uint8_t             previousGamepad;
+    struct pet_data     data;
 };
 
 
