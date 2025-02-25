@@ -11,12 +11,12 @@ typedef struct __Game* GameRef;
 typedef enum MenuState: int {
     MenuStateNone = -1,
     MenuStateFood = 0,
-    MenuStateLight,
+    MenuStateWoke,
     MenuStatePlay,
-    MenuStateHealth,
-    MenuStateClean,
-    MenuStateMeter,
-    MenuStateStatus,
+    MenuStateVive,
+    MenuStatePoop,
+    MenuStateProp,
+    MenuStateStat,
     MenuStateComm,
 } MenuState;
 
@@ -27,8 +27,9 @@ struct __Menu {
     MenuState index;
 };
 
-typedef void (^MenuHandler)(MenuState i);
-struct MenuItem {
+typedef void (^MenuHandler)(MenuRef this);
+
+struct __MenuItem {
     MenuState index;
     int32_t x;
     int32_t y;
@@ -36,6 +37,8 @@ struct MenuItem {
     uint32_t height;
     const uint8_t* data;
     MenuHandler proc;
+    char label[7];
+
 };    
 
 

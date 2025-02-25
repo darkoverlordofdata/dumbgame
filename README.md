@@ -9,17 +9,15 @@ __as seen on bluesky__
 ![alt use-case](https://github.com/darkoverlordofdata/dumbgame/blob/main/Resources/thumbnail.png?raw=true)
 
 ## work in progress
-todays build of dumb game! 
+__todays build of dumb game is UI complete__
+
+now i just have to code game logic
 
 Features:
 - crappy graphics
-    - a pink worm like sprite
-    - <s>horrible 4 color pallete</s>
-    - switch to [ice cream gb](https://lospec.com/palette-list/ice-cream-gb) pallete 
-    - splash screen 
-    - start game & show menu
+- ???
 
-thats it no game logic yet - don't go expecting this kind of service every day
+
 
 
 ## wasm-4

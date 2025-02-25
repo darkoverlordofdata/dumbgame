@@ -54,10 +54,7 @@ void method Update(GameRef this) {
     case GameStateSplashScreen:
         Update(this->splash);
         if (PressedThisFrame(this) & BUTTON_1) {
-            tracef("frameCounter=%d", (int)this->frameCounter);
             this->rnd = NewRandom(frameCounter);
-            tracef("name %s", this->data.name);
-            tracef("magic %x", this->data.magic);
             this->first = false;
             this->state = GameStateInputName;
         }
@@ -70,6 +67,27 @@ void method Update(GameRef this) {
     case GameStateRunning:
         Update(this->menu, PressedThisFrame(this));
         Move(this->pet, 80, 35);
+    
+        switch (this->menu->index) {
+        case MenuStateNone:
+            break;
+        case MenuStateFood:
+            break;
+        case MenuStateWoke:
+            break;
+        case MenuStatePlay:
+            break;
+        case MenuStateVive:
+            break;
+        case MenuStatePoop:
+            break;
+        case MenuStateProp:
+            break;
+        case MenuStateStat:
+            break;
+        case MenuStateComm:
+            break;
+        }
         break;
 
     case GameStateEnd:
@@ -87,7 +105,7 @@ void method Draw(GameRef this) {
 
         *DRAW_COLORS = 4;
         text("X - Play", 80, 70);
-        text("Y - Opts", 80, 85);
+        // text("Y - Opts", 80, 85);
 
         break;
 
@@ -95,9 +113,41 @@ void method Draw(GameRef this) {
         break;
 
     case GameStateRunning:
-        Draw(this->menu);
-        *DRAW_COLORS = 0x0312;
-        Draw(this->pet);
+    *DRAW_COLORS = 0x0312;
+    Draw(this->pet);
+    *DRAW_COLORS = 0x0321;
+    Draw(this->menu);
+
+    // 160 x 80 @40
+    *DRAW_COLORS = 0x0312;
+    switch (this->menu->index) {
+        case MenuStateNone:
+            break;
+        case MenuStateFood:
+            rect(0,40,160,80);
+            break;
+        case MenuStateWoke:
+            break;
+        case MenuStatePlay:
+            rect(0,40,160,80);
+            break;
+        case MenuStateVive:
+            rect(0,40,160,80);
+            break;
+        case MenuStatePoop:
+            rect(0,40,160,80);
+            break;
+        case MenuStateProp:
+            rect(0,40,160,80);
+            break;
+        case MenuStateStat:
+            rect(0,40,160,80);
+            break;
+        case MenuStateComm:
+            rect(0,40,160,80);
+            break;
+        }
+
         break;
 
     case GameStateEnd:
