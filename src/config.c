@@ -6,6 +6,7 @@
  * @see https://wasm4.org/play/text-input
  */
  #include "corefw/cfstring.h"
+#include "pet.h"
 #include "wasm4.h"
 #include "corefw/corefw.h" // IWYU pragma: keep
 #include "config.h"
@@ -246,6 +247,10 @@ void method Update(ConfigRef this)
                     this->game->data.name[5] = 0;
                     trace(this->game->data.name);
                     this->game->data.magic = darkoverlordofdata;
+                    this->game->data.age = 70;
+                    this->game->data.hunger = 50;
+                    this->game->data.happiness = 100;
+                    this->game->data.money = 500;
                     diskw(&this->game->data, sizeof(this->game->data));
         
                 }

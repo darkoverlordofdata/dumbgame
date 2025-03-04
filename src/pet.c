@@ -2,6 +2,7 @@
 #include "corefw/cfstring.h"
 #include "wasm4.h"
 #include "corefw/corefw.h" // IWYU pragma: keep
+#include <string.h>
 
 static struct __CFClass class = {
 	.name = "Pet",
@@ -36,7 +37,7 @@ PetRef method Ctor(PetRef this, GameRef game)
     this->height = 97;
     this->flags = BLIT_2BPP;
     this->data = (uint8_t*)&__data__[0];
-     
+
     return this;
 }
 

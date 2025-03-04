@@ -17,6 +17,17 @@ typedef enum GameState: unsigned int {
     GameStateEnd
 } GameState;
 
+// max 1024 bytes
+struct pet_data {
+    PetType type;
+    uint32_t magic;
+    char    name[20];
+    long    age;     
+    long    hunger;
+    long    happiness;
+    long    money;
+
+};
 
 struct __Game {
     struct __CFObject obj;

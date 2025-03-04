@@ -12,17 +12,6 @@ typedef enum PetType: unsigned int {
     PetBrainWorm
 } PetType;
 
-// max 1024 bytes
-struct pet_data {
-    PetType type;
-    uint32_t magic;
-    char    name[20];
-    long    age;     
-    long    hunger;
-    long    happiness;
-    long    money;
-
-};
 
 struct __Pet {
     struct __CFObject obj;
@@ -33,7 +22,6 @@ struct __Pet {
     uint32_t    width;
     uint32_t    height;                                                    
     uint32_t    flags;
-    struct pet_data pet;
 };
 
 PetRef method Ctor(PetRef, GameRef);

@@ -2,10 +2,12 @@
 #include "config.h"
 #include "corefw/object.h"
 #include "corefw/random.h"
+#include "corefw/printf.h"
 #include "menu.h"
 #include "pet.h"
 #include "splash.h"
 #include "wasm4.h"
+#include <string.h>
 
 static struct __CFClass class = {
     .name = "Game",
@@ -17,7 +19,7 @@ extern unsigned long frameCounter;
 
 // wormy
 GameRef method Ctor(GameRef this) {
-    (void *)this;
+    (GameRef)this;
     this->first = true;
     this->state = GameStateSplashScreen;
     this->frameCounter = 0;
@@ -28,8 +30,9 @@ GameRef method Ctor(GameRef this) {
     return this;
 }
 
+ 
 void method Start(GameRef this) {
-    (void *)this;
+    (GameRef)this;
 
     // https://lospec.com/palette-list/ice-cream-gb
     // PALETTE[0] = 0xfff6d3;
@@ -39,7 +42,7 @@ void method Start(GameRef this) {
 }
 
 uint8_t method PressedThisFrame(GameRef this) {
-    (void *)this;
+    (GameRef)this;
     uint8_t gamepad = *GAMEPAD1;
     uint8_t pressedThisFrame = gamepad & (gamepad ^ this->previousGamepad);
     this->previousGamepad = gamepad;
@@ -47,7 +50,7 @@ uint8_t method PressedThisFrame(GameRef this) {
 }
 
 void method Update(GameRef this) {
-    (void *)this;
+    (GameRef)this;
     this->frameCounter++;
 
     switch (this->state) {
@@ -97,7 +100,9 @@ void method Update(GameRef this) {
 }
 
 void method Draw(GameRef this) {
-    (void *)this;
+    (GameRef)this;
+    char buf[80];
+
     switch (this->state) {
     case GameStateSplashScreen:
         *DRAW_COLORS = 0x0321;
@@ -142,6 +147,19 @@ void method Draw(GameRef this) {
             break;
         case MenuStateStat:
             rect(0,40,160,80);
+
+            *DRAW_COLORS = 0x0321;
+            snprintf(buf, 80, "name:   %s", this->data.name);
+            text(buf, 5, 45);
+            snprintf(buf, 80, "age:    %d", this->data.age);
+            text(buf, 5, 60);
+            snprintf(buf, 80, "hunger: %d", this->data.hunger);
+            text(buf, 5, 75);
+            snprintf(buf, 80, "joy:    %d", this->data.happiness);
+            text(buf, 5, 90);
+            snprintf(buf, 80, "$$$:    %d", this->data.money);
+            text(buf, 5, 105);
+
             break;
         case MenuStateComm:
             rect(0,40,160,80);
