@@ -118,51 +118,99 @@ void method Draw(GameRef this) {
         break;
 
     case GameStateRunning:
-    *DRAW_COLORS = 0x0312;
-    Draw(this->pet);
-    *DRAW_COLORS = 0x0321;
-    Draw(this->menu);
+        *DRAW_COLORS = 0x0312;
+        Draw(this->pet);
+        *DRAW_COLORS = 0x0321;
+        Draw(this->menu);
 
-    // 160 x 80 @40
-    *DRAW_COLORS = 0x0312;
-    switch (this->menu->index) {
+        // 160 x 80 @40
+        *DRAW_COLORS = 0x0312;
+        switch (this->menu->index) {
         case MenuStateNone:
             break;
         case MenuStateFood:
             rect(0,40,160,80);
+            *DRAW_COLORS = 0x0321;
+            snprintf(buf, 80, "%s eats", this->data.name);
+            text(buf, 5, 45);
+
+            sprintf(buf, "whale brain  $100");
+            text(buf, 5, 60);
+            sprintf(buf, "monkey brain $ 80");
+            text(buf, 5, 75);
+            sprintf(buf, "tuna+Hg      $ 50");
+            text(buf, 5, 90);
             break;
+
         case MenuStateWoke:
             break;
+
         case MenuStatePlay:
             rect(0,40,160,80);
+            *DRAW_COLORS = 0x0321;
+            snprintf(buf, 80, "%s play", this->data.name);
+            text(buf, 5, 45);
+
+            sprintf(buf, "skiing       $100");
+            text(buf, 5, 60);
+            sprintf(buf, "martha's     $ 50");
+            text(buf, 5, 75);
+            sprintf(buf, "epstein's    $ 80");
+            text(buf, 5, 90);
             break;
+
         case MenuStateVive:
             rect(0,40,160,80);
+            *DRAW_COLORS = 0x0321;
+            snprintf(buf, 80, "%s meds", this->data.name);
+            text(buf, 5, 45);
+
+            sprintf(buf, "heroin       $100");
+            text(buf, 5, 60);
+            sprintf(buf, "invermectin  $ 80");
+            text(buf, 5, 75);
+            sprintf(buf, "demoic acid  $ 50");
+            text(buf, 5, 90);
             break;
+
         case MenuStatePoop:
             rect(0,40,160,80);
+            *DRAW_COLORS = 0x0321;
+            snprintf(buf, 80, "%s shit", this->data.name);
+            text(buf, 5, 45);
+
             break;
+
         case MenuStateProp:
             rect(0,40,160,80);
+            *DRAW_COLORS = 0x0321;
+            snprintf(buf, 80, "%s", this->data.name);
+            text(buf, 5, 45);
+
+            snprintf(buf, 80, "age    %d", this->data.age);
+            text(buf, 5, 60);
+            snprintf(buf, 80, "hunger %d", this->data.hunger);
+            text(buf, 5, 75);
+            snprintf(buf, 80, "joy    %d", this->data.happiness);
+            text(buf, 5, 90);
+            snprintf(buf, 80, "$$$    %d", this->data.money);
+            text(buf, 5, 105);
             break;
+
         case MenuStateStat:
             rect(0,40,160,80);
-
             *DRAW_COLORS = 0x0321;
-            snprintf(buf, 80, "name:   %s", this->data.name);
+            snprintf(buf, 80, "%s", this->data.name);
             text(buf, 5, 45);
-            snprintf(buf, 80, "age:    %d", this->data.age);
-            text(buf, 5, 60);
-            snprintf(buf, 80, "hunger: %d", this->data.hunger);
-            text(buf, 5, 75);
-            snprintf(buf, 80, "joy:    %d", this->data.happiness);
-            text(buf, 5, 90);
-            snprintf(buf, 80, "$$$:    %d", this->data.money);
-            text(buf, 5, 105);
 
             break;
+
         case MenuStateComm:
             rect(0,40,160,80);
+            *DRAW_COLORS = 0x0321;
+            snprintf(buf, 80, "%s talk", this->data.name);
+            text(buf, 5, 45);
+
             break;
         }
 
