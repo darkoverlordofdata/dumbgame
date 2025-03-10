@@ -11,6 +11,7 @@
 #include "corefw/corefw.h" // IWYU pragma: keep
 #include "config.h"
 #include "game.h"
+#include <stdbool.h>
 
 static struct __CFClass class = {
 	.name = "Config",
@@ -29,6 +30,13 @@ static Keyboard_Row keyboard[] = {
 };
 
 static uint32_t darkoverlordofdata = 0xd16a; // big if true!
+static long     default_age = 70;
+static float    default_hunger = 50;
+static float    default_happiness = 100;
+static float    default_money = 500;
+static float    default_poop = 0;
+static bool     default_sick = false;
+
 
 /**
  * Config 
@@ -247,12 +255,13 @@ void method Update(ConfigRef this)
                     this->game->data.name[5] = 0;
                     trace(this->game->data.name);
                     this->game->data.magic = darkoverlordofdata;
-                    this->game->data.age = 70;
-                    this->game->data.hunger = 50;
-                    this->game->data.happiness = 100;
-                    this->game->data.money = 500;
+                    this->game->data.age = default_age;
+                    this->game->data.hunger = default_hunger;
+                    this->game->data.happiness = default_happiness;
+                    this->game->data.money = default_money;
+                    this->game->data.poop = default_poop;
+                    this->game->data.sick = default_sick;
                     diskw(&this->game->data, sizeof(this->game->data));
-        
                 }
             }
         }
@@ -274,8 +283,8 @@ void method Move(ConfigRef this, long x, long y)
     (long)x;
     (long)y;
 
-    this->x = x;
-    this->y = y;
+    this->x = (int32_t)x;
+    this->y = (int32_t)y;
 }
 
 long method GetWidth(ConfigRef this)

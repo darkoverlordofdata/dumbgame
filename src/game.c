@@ -17,12 +17,21 @@ CFClassRef Game = &class;
 
 extern unsigned long frameCounter;
 
+float clamp(float val, float minVal, float maxVal)
+{
+    float min = (val > minVal) ? val : minVal;
+    return (min < maxVal) ? min : maxVal;
+}
 // wormy
 GameRef method Ctor(GameRef this) {
     (GameRef)this;
     this->first = true;
     this->state = GameStateSplashScreen;
     this->frameCounter = 0;
+    this->autoToilet = true;
+    this->autoTick = true;
+    this->autoMoney = true;;
+    this->isGod = false;
     this->splash = NewSplash(this);
     this->menu = NewMenu(this);
     this->config = NewConfig(this);
@@ -52,6 +61,34 @@ uint8_t method PressedThisFrame(GameRef this) {
 void method Update(GameRef this) {
     (GameRef)this;
     this->frameCounter++;
+
+    if (this->autoTick) this->tick += 1;
+    if (this->autoMoney) this->data.money += 10;
+    this->data.hunger -= 3;
+    this->data.happiness -= 2;
+    if (this->data.sick) {
+        this->data.hunger -= 5;
+        this->data.happiness -= 2;
+    }
+    this->data.happiness = clamp(this->data.happiness, 0, 100);
+    this->data.hunger = clamp(this->data.hunger, 0, 100);
+
+    if (this->autoToilet) {
+        if (this->data.hunger > 90) {
+            if (NextDouble() > 0.70)
+                this->data.poop++;
+        }
+        else {
+            if (NextDouble() > 0.85)
+                this->data.poop++;
+        }
+    }
+    this->data.poop = clamp(this->data.poop, 0, 3);
+    if (NextDouble() < (0.1*this->data.poop)) {
+        this->data.sick = true;
+    }
+    if (this->data.mood != PetMoodDead) this->data.age++;
+
 
     switch (this->state) {
     case GameStateSplashScreen:
@@ -97,6 +134,23 @@ void method Update(GameRef this) {
 
         break;
     }
+    if (this->data.mood == PetMoodDead) return;
+
+    if (this->data.hunger>50 && this->data.happiness>=60) {
+        this->data.mood = PetMoodHappy;
+    }
+    else if (this->data.hunger>=30 && this->data.happiness<30) {
+        this->data.mood = PetMoodAngry;
+    }
+    else if (this->data.hunger<=0 && (!this->isGod)) {
+        this->data.mood = PetMoodDead;
+    }
+    else if (this->data.hunger<30 || this->data.sick) {
+        this->data.mood = PetMoodSad;
+    }
+    else this->data.mood = PetMoodNothing;
+    
+
 }
 
 void method Draw(GameRef this) {
@@ -133,6 +187,8 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s eats", this->data.name);
             text(buf, 5, 45);
+            snprintf(buf, 80, "%06d", timer(this->tick));
+            text(buf, 108, 45);
 
             sprintf(buf, "whale brain  $100");
             text(buf, 5, 60);
@@ -150,6 +206,8 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s play", this->data.name);
             text(buf, 5, 45);
+            snprintf(buf, 80, "%06d", timer(this->tick));
+            text(buf, 108, 45);
 
             sprintf(buf, "skiing       $100");
             text(buf, 5, 60);
@@ -164,6 +222,8 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s meds", this->data.name);
             text(buf, 5, 45);
+            snprintf(buf, 80, "%06d", timer(this->tick));
+            text(buf, 108, 45);
 
             sprintf(buf, "heroin       $100");
             text(buf, 5, 60);
@@ -178,6 +238,8 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s shit", this->data.name);
             text(buf, 5, 45);
+            snprintf(buf, 80, "%06d", timer(this->tick));
+            text(buf, 108, 45);
 
             break;
 
@@ -186,6 +248,8 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s", this->data.name);
             text(buf, 5, 45);
+            snprintf(buf, 80, "%06d", timer(this->tick));
+            text(buf, 108, 45);
 
             snprintf(buf, 80, "age    %d", this->data.age);
             text(buf, 5, 60);
@@ -202,6 +266,8 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s", this->data.name);
             text(buf, 5, 45);
+            snprintf(buf, 80, "%06d", timer(this->tick));
+            text(buf, 108, 45);
 
             break;
 
@@ -210,6 +276,8 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s talk", this->data.name);
             text(buf, 5, 45);
+            snprintf(buf, 80, "%06d", timer(this->tick));
+            text(buf, 108, 45);
 
             break;
         }

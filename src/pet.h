@@ -12,6 +12,13 @@ typedef enum PetType: unsigned int {
     PetBrainWorm
 } PetType;
 
+typedef enum PetMood: unsigned int {
+    PetMoodNothing,
+    PetMoodHappy,
+    PetMoodAngry,
+    PetMoodSad,
+    PetMoodDead
+} PetMood;
 
 struct __Pet {
     struct __CFObject obj;

@@ -6,6 +6,7 @@
 #include "pet.h"
 #include "splash.h"
 #include "config.h"
+#include <stdbool.h>
 
 typedef struct __Game* GameRef;
 extern CFClassRef Game;
@@ -19,14 +20,16 @@ typedef enum GameState: unsigned int {
 
 // max 1024 bytes
 struct pet_data {
-    PetType type;
-    uint32_t magic;
-    char    name[20];
-    long    age;     
-    long    hunger;
-    long    happiness;
-    long    money;
-
+    uint32_t    magic;
+    PetType     type;
+    PetMood     mood;
+    char        name[20];
+    long        age;     
+    bool        sick;
+    float       hunger;
+    float       happiness;
+    float       money;
+    float       poop;
 };
 
 struct __Game {
@@ -38,8 +41,13 @@ struct __Game {
     PetRef              pet;
     ConfigRef           config;
     CFRandomRef         rnd;
+    long                tick;
     bool                first;
     unsigned long       frameCounter;
+    bool                isGod;
+    bool                autoToilet;
+    bool                autoMoney;
+    bool                autoTick;
     uint8_t             previousGamepad;
     struct pet_data     data;
 };
@@ -54,4 +62,9 @@ uint8_t method PressedThisFrame(GameRef);
 static inline GameRef NewGame()
 {
     return Ctor((GameRef)CFCreate(Game));
+}
+
+static inline long timer(long tick) 
+{
+    return (long)(tick/60);
 }
