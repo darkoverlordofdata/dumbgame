@@ -16,7 +16,7 @@ now i just have to code game logic
 Features:
 - crappy graphics
 - ???
-
+- usinf c2y standard
 
 
 

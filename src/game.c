@@ -1,4 +1,5 @@
 #include "game.h"
+#include "clock.h"
 #include "config.h"
 #include "corefw/object.h"
 #include "corefw/random.h"
@@ -35,6 +36,36 @@ GameRef method Ctor(GameRef this) {
     this->splash = NewSplash(this);
     this->menu = NewMenu(this);
     this->config = NewConfig(this);
+    this->clock = NewClock(this);
+    SetOnTick(this->clock,  ^(ClockRef clock, GameRef this) {
+        (ClockRef)clock;
+        if (this->autoMoney) this->data.money += 10;
+        this->data.hunger -= 3;
+        this->data.happiness -= 2;
+        if (this->data.sick) {
+            this->data.hunger -= 5;
+            this->data.happiness -= 2;
+        }
+        this->data.happiness = clamp(this->data.happiness, 0, 100);
+        this->data.hunger = clamp(this->data.hunger, 0, 100);
+    
+        if (this->autoToilet) {
+            if (this->data.hunger > 90) {
+                if (NextDouble() > 0.70)
+                    this->data.poop++;
+            }
+            else {
+                if (NextDouble() > 0.85)
+                    this->data.poop++;
+            }
+        }
+        this->data.poop = clamp(this->data.poop, 0, 3);
+        if (NextDouble() < (0.1*this->data.poop)) {
+            this->data.sick = true;
+        }
+        if (this->data.mood != PetMoodDead) this->data.age++;
+    
+    });
     diskr(&this->data, sizeof(this->data));
     return this;
 }
@@ -62,33 +93,7 @@ void method Update(GameRef this) {
     (GameRef)this;
     this->frameCounter++;
 
-    if (this->autoTick) this->tick += 1;
-    if (this->autoMoney) this->data.money += 10;
-    this->data.hunger -= 3;
-    this->data.happiness -= 2;
-    if (this->data.sick) {
-        this->data.hunger -= 5;
-        this->data.happiness -= 2;
-    }
-    this->data.happiness = clamp(this->data.happiness, 0, 100);
-    this->data.hunger = clamp(this->data.hunger, 0, 100);
-
-    if (this->autoToilet) {
-        if (this->data.hunger > 90) {
-            if (NextDouble() > 0.70)
-                this->data.poop++;
-        }
-        else {
-            if (NextDouble() > 0.85)
-                this->data.poop++;
-        }
-    }
-    this->data.poop = clamp(this->data.poop, 0, 3);
-    if (NextDouble() < (0.1*this->data.poop)) {
-        this->data.sick = true;
-    }
-    if (this->data.mood != PetMoodDead) this->data.age++;
-
+    if (this->autoTick) Tick(this->clock);
 
     switch (this->state) {
     case GameStateSplashScreen:
@@ -187,7 +192,7 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s eats", this->data.name);
             text(buf, 5, 45);
-            snprintf(buf, 80, "%06d", timer(this->tick));
+            snprintf(buf, 80, "%06d", this->clock->times);
             text(buf, 108, 45);
 
             sprintf(buf, "whale brain  $100");
@@ -206,7 +211,7 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s play", this->data.name);
             text(buf, 5, 45);
-            snprintf(buf, 80, "%06d", timer(this->tick));
+            snprintf(buf, 80, "%06d", this->clock->times);
             text(buf, 108, 45);
 
             sprintf(buf, "skiing       $100");
@@ -222,7 +227,7 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s meds", this->data.name);
             text(buf, 5, 45);
-            snprintf(buf, 80, "%06d", timer(this->tick));
+            snprintf(buf, 80, "%06d", this->clock->times);
             text(buf, 108, 45);
 
             sprintf(buf, "heroin       $100");
@@ -238,7 +243,7 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s shit", this->data.name);
             text(buf, 5, 45);
-            snprintf(buf, 80, "%06d", timer(this->tick));
+            snprintf(buf, 80, "%06d", this->clock->times);
             text(buf, 108, 45);
 
             break;
@@ -248,7 +253,7 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s", this->data.name);
             text(buf, 5, 45);
-            snprintf(buf, 80, "%06d", timer(this->tick));
+            snprintf(buf, 80, "%06d", this->clock->times);
             text(buf, 108, 45);
 
             snprintf(buf, 80, "age    %d", this->data.age);
@@ -266,7 +271,7 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s", this->data.name);
             text(buf, 5, 45);
-            snprintf(buf, 80, "%06d", timer(this->tick));
+            snprintf(buf, 80, "%06d", this->clock->times);
             text(buf, 108, 45);
 
             break;
@@ -276,7 +281,7 @@ void method Draw(GameRef this) {
             *DRAW_COLORS = 0x0321;
             snprintf(buf, 80, "%s talk", this->data.name);
             text(buf, 5, 45);
-            snprintf(buf, 80, "%06d", timer(this->tick));
+            snprintf(buf, 80, "%06d", this->clock->times);
             text(buf, 108, 45);
 
             break;

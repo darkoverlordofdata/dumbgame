@@ -1,4 +1,5 @@
 #pragma once
+#include <stdbool.h>
 #include "corefw/cfstring.h"
 #include "corefw/class.h"
 #include "corefw/corefw.h" // IWYU pragma: keep
@@ -6,7 +7,7 @@
 #include "pet.h"
 #include "splash.h"
 #include "config.h"
-#include <stdbool.h>
+#include "clock.h"
 
 typedef struct __Game* GameRef;
 extern CFClassRef Game;
@@ -41,7 +42,7 @@ struct __Game {
     PetRef              pet;
     ConfigRef           config;
     CFRandomRef         rnd;
-    long                tick;
+    ClockRef            clock;
     bool                first;
     unsigned long       frameCounter;
     bool                isGod;
@@ -64,7 +65,3 @@ static inline GameRef NewGame()
     return Ctor((GameRef)CFCreate(Game));
 }
 
-static inline long timer(long tick) 
-{
-    return (long)(tick/60);
-}

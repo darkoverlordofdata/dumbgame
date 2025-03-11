@@ -20,6 +20,8 @@ typedef enum PetMood: unsigned int {
     PetMoodDead
 } PetMood;
 
+
+
 struct __Pet {
     struct __CFObject obj;
     GameRef     game;
