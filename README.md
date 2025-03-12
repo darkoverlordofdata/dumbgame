@@ -18,6 +18,9 @@ Features:
 - ???
 - usinf c2y standard
 
+## theme
+https://lospec.com/palette-list/weekly-release
+
 
 
 ## wasm-4
