@@ -39,6 +39,8 @@ GameRef method Ctor(GameRef this) {
     this->clock = NewClock(this);
     SetOnTick(this->clock,  ^(ClockRef clock, GameRef this) {
         (ClockRef)clock;
+        tracef("tick:: %d", (int)clock->times);
+
         if (this->autoMoney) this->data.money += 10;
         this->data.hunger -= 3;
         this->data.happiness -= 2;
@@ -92,7 +94,6 @@ uint8_t method PressedThisFrame(GameRef this) {
 void method Update(GameRef this) {
     (GameRef)this;
     this->frameCounter++;
-
     if (this->autoTick) Tick(this->clock);
 
     switch (this->state) {
